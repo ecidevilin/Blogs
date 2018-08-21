@@ -1,6 +1,6 @@
 !["pipeline"](https://pic2.zhimg.com/v2-3785f9c0621f81a80cdab6fbaa3d04b5_b.jpg)
 
-图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12
+<center>图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12</center>
 
 # IA
 
@@ -76,15 +76,15 @@ return hout;
 
 ![2](https://pic1.zhimg.com/80/v2-87029cee3fbdd447a97e188c2a52d2a2_hd.gif)
 
-图2：integer
+<center>图2：integer</center>
 
 ![3](https://pic1.zhimg.com/80/v2-00b8af0c4de4405d525ba6606f9cb24b_hd.gif)
 
-图3：fractional_odd
+<center>图3：fractional_odd</center>
 
 ![4](https://pic2.zhimg.com/80/v2-092729346554f82f7e7fd56717e2f8f2_hd.gif)
 
-图4：fractional_even
+<center>图4：fractional_even</center>
 
 3. outputtopology：输出拓扑结构。有三种：triangle_cw（顺时针环绕三角形）、triangle_ccw（逆时针环绕三角形）、line（线段）。
 4. outputcontrolpoints：输出的控制点的数量（每个图元），不一定与输入数量相同。
@@ -104,7 +104,7 @@ SV_TessFactor的长度为4，指定四条边各被分为多少段，SV_InsideTes
 
 ![5](https://pic2.zhimg.com/80/v2-c8a71cd56b5922e175e4b7c0d8206654_hd.png)
 
-图5：SV_TessFactor:4,2,9,3 SV_InsideTessFactor:6,7
+<center>图5：SV_TessFactor:4,2,9,3 SV_InsideTessFactor:6,7</center>
 
 
 ### tri
@@ -113,11 +113,11 @@ SV_TessFactor的长度为3，指定三条边各被分为多少段，SV_InsideTes
 
 ![6](https://pic4.zhimg.com/80/v2-c9b07f0b90604ce60e242d39bc2349e8_hd.png)
 
-图6
+<center>图6</center>
 
 ![7](https://pic2.zhimg.com/80/v2-e5ae5deba4275b691231eacd56059e3b_hd.png)
 
-图7
+<center>图7</center>
 
 
 整体分割，如果图8所示。
@@ -125,7 +125,7 @@ SV_TessFactor的长度为3，指定三条边各被分为多少段，SV_InsideTes
 
 ![8](https://pic1.zhimg.com/80/v2-4d52caa84ea507d65d767f237262091e_hd.png)
 
-图8：SV_TessFactor:4,1,6 SV_InsideTessFactor:5
+<center>图8：SV_TessFactor:4,1,6 SV_InsideTessFactor:5</center>
 
 
 ### isoline
@@ -134,9 +134,9 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 ![9](https://pic3.zhimg.com/80/v2-d2897dbffe7f4a0114469af369c81742_hd.png)
 
-图9：SV_TessFactor:3,4
+<center>图9：SV_TessFactor:3,4</center>
 
 ![10](https://pic4.zhimg.com/80/v2-3a5885bd4ffab81cb926725ce3352eae_hd.png)
 
-图10：SV_TessFactor:6,2
+<center>图10：SV_TessFactor:6,2</center>
 
