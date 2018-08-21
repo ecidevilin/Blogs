@@ -2,6 +2,8 @@
 
 <center> 图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12 </center>
 
+曲面细分是渲染管线的一个可选项，我们可以用它来对网格进行平滑处理，也可以用它来实现连续LOD（Levels of Details）算法。
+
 # Input Assembler Stage
 
 当我们使用曲面细分的时候，我们不再向IA阶段（Input Assembler Stage，输入装配阶段，从显存读取几何数据用来组合几何图元，例如三角面或线段）提交三角面，而是提交数个控制点的patch。
@@ -134,7 +136,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 ![9](https://pic3.zhimg.com/80/v2-d2897dbffe7f4a0114469af369c81742_hd.png)
 
-<center> 图9：SV_TessFactor:3,4 </center>
+<center> 图9：SV_TessFactor:3,4  </center>
 
 ![10](https://pic4.zhimg.com/80/v2-3a5885bd4ffab81cb926725ce3352eae_hd.png)
 
@@ -156,7 +158,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 ## tri
 
-顶点以重心坐标（Barycentric coordinates[This link](https://en.wikipedia.org/wiki/Barycentric_coordinate_system#Barycentric_coordinates_on_triangles)）的形式(u, v, w)传给DS，如图12所示。
+顶点以重心坐标（[Barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system#Barycentric_coordinates_on_triangles)）的形式(u, v, w)传给DS，如图12所示。
 
 ![12](https://pic4.zhimg.com/80/v2-c409ca0f839a291ec6bd77b7f5f63b90_hd.png)
 
@@ -220,3 +222,11 @@ dout.PosH = mul(posW, gViewProj);
 return dout;
 }
 ```
+
+这里没有做任何的变形，只是将顶点坐标计算出来，最后渲染出来的结果跟没有做曲面细分的shader没有区别。
+我们可以使用贝塞尔曲线或曲面来改变三角面的形状，详情请参考文献1。
+
+#参考文献
+
+1. Introduction to 3D Game Programming with DirectX 12
+2. [OpenGL Tessellation](https://www.khronos.org/opengl/wiki/Tessellation)
