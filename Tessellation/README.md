@@ -2,21 +2,23 @@
 
 <center> 图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12 </center>
 
-曲面细分是渲染管线的一个可选项，我们可以用它来对网格进行平滑处理，也可以用它来实现连续LOD（Levels of Details）算法。
+
+曲面细分是渲染管线的一个可选项，我们可以用它来对网格进行平滑处理，也可以用它来实现连续LOD（Levels of Details）算法。本文为曲面细分的学习笔记，粗略的阐述了渲染管线中曲面细分相关阶段的知识点。这里以DirectX 12为主要描述对象，OpenGL作为补充。
+
 
 # Input Assembler Stage
 
 当我们使用曲面细分的时候，我们不再向IA阶段（Input Assembler Stage，输入装配阶段，从显存读取几何数据用来组合几何图元，例如三角面或线段）提交三角面，而是提交数个控制点的patch。
-三角形可以认为是有三个控制点的patch，所以我们依然可以提交常规的三角面网格。一个有四个控制点的四边形也可以被提交，但是在曲面细分阶段这些patch会被细分成三角面。
+三角形可以认为是有三个控制点的patch，所以我们依然可以提交常规的三角面网格。四边形也可以被提交，不过在曲面细分阶段这些patch会被细分成三角面。
 当然我们还可以在一个patch中添加更多的控制点。例如，我们可以用多个控制点来调整贝塞尔曲线（Bezier curves），或者贝塞尔曲面。控制点越多，自由度越高。
 
 # Vertex Shader
 
-控制点也会经过VS的处理，在这里，我们可以做一些对控制点的计算，例如动画或者物理计算。
+控制点也会经过VS的处理，或者说，VS变成了控制点的shader。在这里，我们可以做一些针对控制点的计算，例如动画或者物理计算。
 
 # Hull Shader
 
-经过处理后的控制点会传到HS（对应于OpenGL Core的TCS，Tessellation Control Shader）,HS又会分为Const Hull Shader和Control Point Hull Shader。
+经过VS处理后的控制点会传到HS（对应于OpenGL的TCS，Tessellation Control Shader）,HS又会分为Const Hull Shader和Control Point Hull Shader。
 
 ## ConstHS
 
@@ -44,7 +46,7 @@ return pt;
 }
 ```
 
-InputPatch<VertexOut,4>尖括号中的4代表输入的控制点的数量（每个图元），由API设置。
+InputPatch<VertexOut,4>尖括号中的4代表每个patch输入的控制点数量（这里是quad），由API设置。
 SV_TessFactor代表细分度，SV_InsideTessFactor代表内部细分度。至于如何细分，我们稍后会解释。
 
 ## ControlPointHS
@@ -73,7 +75,7 @@ return hout;
 ```
 
 我们来看一下HS的几个属性：
-1. domain: 指定patch的类型，可选的有：tri(三角形)、quad（四边形）、isoline（线段，苹果的metal api不支持2018/8/21）。不同的patch类型，细分的方式也有差别，后面会详细介绍。
+1. domain: 指定patch的类型，可选的有：tri(三角形)、quad（四边形）、isoline（线段，苹果的metal api不支持：2018/8/21）。不同的patch类型，细分的方式也有差别，后面会详细介绍。
 2. partitioning：分割模式，有三种：integer，fractional_even，fractional_odd。这三种分割模式，如图2、图3、图4所示。
 
 ![2](https://pic1.zhimg.com/80/v2-87029cee3fbdd447a97e188c2a52d2a2_hd.gif)
@@ -89,9 +91,9 @@ return hout;
 <center> 图4：fractional_even </center>
 
 3. outputtopology：输出拓扑结构。有三种：triangle_cw（顺时针环绕三角形）、triangle_ccw（逆时针环绕三角形）、line（线段）。
-4. outputcontrolpoints：输出的控制点的数量（每个图元），不一定与输入数量相同。
+4. outputcontrolpoints：输出的控制点的数量（每个图元），不一定与输入数量相同，也可以新增控制点。
 5. patchconstantfunc：指定ConstHS。
-6. maxtessfactor：最大细分度，告知驱动程序我们的shader用到的最大细分度，硬件可能会针对这个做出优化。Direct3D 11和OpenGL Core都至少支持64。
+6. maxtessfactor：最大细分度，告知驱动程序shader用到的最大细分度，硬件可能会针对这个做出优化。Direct3D 11和OpenGL Core都至少支持64。
 然后是HS的参数：
 1. InputPatch：输入的patch。
 2. SV_OutputControlPointID：给出控制点的ID。
@@ -134,11 +136,11 @@ SV_TessFactor的长度为3，指定三条边各被分为多少段，SV_InsideTes
 
 SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指定线段被分为多少段，SV_InsideTessFactor会被忽略。如图9和图10所示。
 
-![9](https://pic3.zhimg.com/80/v2-d2897dbffe7f4a0114469af369c81742_hd.png)
+![9](https://pic1.zhimg.com/80/v2-1d6bb900e6306fd44359c0845f03ce0b_hd.png)
 
 <center> 图9：SV_TessFactor:3,4  </center>
 
-![10](https://pic4.zhimg.com/80/v2-3a5885bd4ffab81cb926725ce3352eae_hd.png)
+![10](https://pic1.zhimg.com/80/v2-568592621503bc8d53f95c00791a4fa2_hd.png)
 
 <center> 图10：SV_TessFactor:6,2 </center>
 
@@ -168,7 +170,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 顶点以UV坐标的形式传给DS，如图13所示。
 
-![13](https://pic3.zhimg.com/80/v2-38245d55762ee6551e77ec2aa8c4117f_hd.png)
+![13](https://pic2.zhimg.com/80/v2-ebcb92ec3bcf6457e2a81234ba2c70c1_hd.jpg)
 
 <center> 图13 </center>
 
@@ -224,7 +226,7 @@ return dout;
 ```
 
 这里没有做任何的变形，只是将顶点坐标计算出来，最后渲染出来的结果跟没有做曲面细分的shader没有区别。
-我们可以使用贝塞尔曲线或曲面来改变三角面的形状，详情请参考文献1。
+我们可以使用贝塞尔曲线或曲面来改变三角面的形状，详情请参考文献1（或者会在后续文章中介绍，当然，我也不确定会不会有后续）。
 
 #参考文献
 
