@@ -73,9 +73,18 @@ return hout;
 我们来看一下HS的几个属性：
 1. domain: 指定patch的类型，可选的有：tri(三角形)、quad（四边形）、isoline（线段，苹果的metal api不支持2018/8/21）。不同的patch类型，细分的方式也有差别，后面会详细介绍。
 2. partitioning：分割模式，有三种：integer，fractional_even，fractional_odd。这三种分割模式，如图2、图3、图4所示。
-![图2：integer](https://pic1.zhimg.com/80/v2-87029cee3fbdd447a97e188c2a52d2a2_hd.gif)
-![图3：fractional_odd](https://pic1.zhimg.com/80/v2-00b8af0c4de4405d525ba6606f9cb24b_hd.gif)
-![图4：fractional_even](https://pic2.zhimg.com/80/v2-092729346554f82f7e7fd56717e2f8f2_hd.gif)
+![2](https://pic1.zhimg.com/80/v2-87029cee3fbdd447a97e188c2a52d2a2_hd.gif)
+
+图2：integer
+
+![3](https://pic1.zhimg.com/80/v2-00b8af0c4de4405d525ba6606f9cb24b_hd.gif)
+
+图3：fractional_odd
+
+![4](https://pic2.zhimg.com/80/v2-092729346554f82f7e7fd56717e2f8f2_hd.gif)
+
+图4：fractional_even
+
 3. outputtopology：输出拓扑结构。有三种：triangle_cw（顺时针环绕三角形）、triangle_ccw（逆时针环绕三角形）、line（线段）。
 4. outputcontrolpoints：输出的控制点的数量（每个图元），不一定与输入数量相同。
 5. patchconstantfunc：指定ConstHS。
@@ -92,26 +101,41 @@ return hout;
 
 SV_TessFactor的长度为4，指定四条边各被分为多少段，SV_InsideTessFactor长度为2，指定内部在横向和纵向上各被分为多少段，如图5所示。
 
-![图5：SV_TessFactor:4,2,9,3 SV_InsideTessFactor:6,7](https://pic2.zhimg.com/80/v2-c8a71cd56b5922e175e4b7c0d8206654_hd.png)
+![5](https://pic2.zhimg.com/80/v2-c8a71cd56b5922e175e4b7c0d8206654_hd.png)
+
+图5：SV_TessFactor:4,2,9,3 SV_InsideTessFactor:6,7
 
 
 ### tri
 
 SV_TessFactor的长度为3，指定三条边各被分为多少段，SV_InsideTessFactor的长度为1，指定内部有多少个点。关于内部点的计算方法，如图6和图7所示，对于三角形的每个顶点，将他们的临边分割，然后在分割点上做垂线，得到的交点即为内部点。
 
-![图6](https://pic4.zhimg.com/80/v2-c9b07f0b90604ce60e242d39bc2349e8_hd.png)
-![图7](https://pic2.zhimg.com/80/v2-e5ae5deba4275b691231eacd56059e3b_hd.png)
+![6](https://pic4.zhimg.com/80/v2-c9b07f0b90604ce60e242d39bc2349e8_hd.png)
+
+图6
+
+![7](https://pic2.zhimg.com/80/v2-e5ae5deba4275b691231eacd56059e3b_hd.png)
+
+图7
 
 
 整体分割，如果图8所示。
 
 
-![图8：SV_TessFactor:4,1,6 SV_InsideTessFactor:5](https://pic1.zhimg.com/80/v2-4d52caa84ea507d65d767f237262091e_hd.png)
+![8](https://pic1.zhimg.com/80/v2-4d52caa84ea507d65d767f237262091e_hd.png)
+
+图8：SV_TessFactor:4,1,6 SV_InsideTessFactor:5
 
 
 ### isoline
 
 SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指定线段被分为多少段，SV_InsideTessFactor会被忽略。如图9和图10所示。
 
-![图9：SV_TessFactor:3,4](https://pic3.zhimg.com/80/v2-d2897dbffe7f4a0114469af369c81742_hd.png)
-![图10：SV_TessFactor:6,2](https://pic4.zhimg.com/80/v2-3a5885bd4ffab81cb926725ce3352eae_hd.png)
+![9](https://pic3.zhimg.com/80/v2-d2897dbffe7f4a0114469af369c81742_hd.png)
+
+图9：SV_TessFactor:3,4
+
+![10](https://pic4.zhimg.com/80/v2-3a5885bd4ffab81cb926725ce3352eae_hd.png)
+
+图10：SV_TessFactor:6,2
+
