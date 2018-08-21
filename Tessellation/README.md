@@ -3,13 +3,15 @@
 <center> 图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12 </center>
 
 
-曲面细分是渲染管线的一个可选项，我们可以用它来对网格进行平滑处理，也可以用它来实现连续LOD（Levels of Details）算法。本文为曲面细分的学习笔记，粗略的阐述了渲染管线中曲面细分相关阶段的知识点。这里以DirectX 12为主要描述对象，OpenGL作为补充。
+曲面细分是渲染管线的一个可选项，我们可以用它来对网格进行平滑处理，也可以用它来实现连续LOD（Levels of Details）算法。本文为曲面细分的学习笔记，粗略的描述了渲染管线中曲面细分的相关阶段。这里以DirectX 12为主要描述对象，OpenGL作为补充。
 
 
 # Input Assembler Stage
 
-当我们使用曲面细分的时候，我们不再向IA阶段（Input Assembler Stage，输入装配阶段，从显存读取几何数据用来组合几何图元，例如三角面或线段）提交三角面，而是提交数个控制点的patch。
-三角形可以认为是有三个控制点的patch，所以我们依然可以提交常规的三角面网格。四边形也可以被提交，不过在曲面细分阶段这些patch会被细分成三角面。
+当我们使用曲面细分的时候，我们不再向IA阶段（Input Assembler Stage，输入装配阶段，从显存读取几何数据用来组合几何图元）提交三角面，而是提交包含数个控制点的patch。例如isoline，我们提交线段的两端作为控制点传给GPU，以这两个控制点为基础来对线段进行变形。
+
+三角形可以认为是有三个控制点的patch，所以我们依然可以提交常规的三角面网格。四边形（四个控制点）也可以被提交，不过在曲面细分阶段这些patch会被细分成三角面。
+
 当然我们还可以在一个patch中添加更多的控制点。例如，我们可以用多个控制点来调整贝塞尔曲线（Bezier curves），或者贝塞尔曲面。控制点越多，自由度越高。
 
 # Vertex Shader
@@ -90,6 +92,7 @@ return hout;
 
 <center> 图4：fractional_even </center>
 
+
 3. outputtopology：输出拓扑结构。有三种：triangle_cw（顺时针环绕三角形）、triangle_ccw（逆时针环绕三角形）、line（线段）。
 4. outputcontrolpoints：输出的控制点的数量（每个图元），不一定与输入数量相同，也可以新增控制点。
 5. patchconstantfunc：指定ConstHS。
@@ -146,15 +149,15 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 # Tessellation Stage
 
-曲面细分阶段，这个阶段是由硬件完成的，会根据ConstHS将patch分割成多个三角面或者线段。这些分割点会被传给下一个阶段DS，以供插值。
+曲面细分阶段，这个阶段是由硬件完成的，会根据ConstHS将patch分割成多个三角面或者线段。这些顶点会被传给下一个阶段DS，以供插值。
 
-对于不同的patch
+对于不同的patch，这些顶点的形式也不一样。
 
 ## quad
 
 顶点以UV坐标的形式传给DS，如图11所示。
 
-![11](https://pic1.zhimg.com/80/v2-4137fdf02af78b2f3342c0d2c01ca829_hd.png)
+![11](https://pic1.zhimg.com/80/v2-449e216a4222b2f94023dc2d02788e33_hd.png)
 
 <center> 图11 </center>
 
@@ -162,7 +165,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 顶点以重心坐标（[Barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system#Barycentric_coordinates_on_triangles)）的形式(u, v, w)传给DS，如图12所示。
 
-![12](https://pic4.zhimg.com/80/v2-c409ca0f839a291ec6bd77b7f5f63b90_hd.png)
+![12](https://pic2.zhimg.com/80/v2-5b338a40879759999a6dcfc39fe3a2b2_hd.png)
 
 <center> 图12 </center>
 
@@ -170,7 +173,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 顶点以UV坐标的形式传给DS，如图13所示。
 
-![13](https://pic2.zhimg.com/80/v2-ebcb92ec3bcf6457e2a81234ba2c70c1_hd.jpg)
+![13](https://pic1.zhimg.com/80/v2-751cfbcc6dbe4e7776a8769e35dc204f_hd.png)
 
 <center> 图13 </center>
 
@@ -226,9 +229,10 @@ return dout;
 ```
 
 这里没有做任何的变形，只是将顶点坐标计算出来，最后渲染出来的结果跟没有做曲面细分的shader没有区别。
-我们可以使用贝塞尔曲线或曲面来改变三角面的形状，详情请参考文献1（或者会在后续文章中介绍，当然，我也不确定会不会有后续）。
+我们可以使用贝塞尔曲线或曲面来改变三角面的形状，详情请参考文献1（或许会在后续文章中介绍，当然，我也不确定会不会有后续）。
 
 #参考文献
 
 1. Introduction to 3D Game Programming with DirectX 12
 2. [OpenGL Tessellation](https://www.khronos.org/opengl/wiki/Tessellation)
+3. [Tessellation Modes Quick Reference](http://reedbeta.com/blog/tess-quick-ref/)
