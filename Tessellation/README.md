@@ -73,6 +73,7 @@ return hout;
 我们来看一下HS的几个属性：
 1. domain: 指定patch的类型，可选的有：tri(三角形)、quad（四边形）、isoline（线段，苹果的metal api不支持2018/8/21）。不同的patch类型，细分的方式也有差别，后面会详细介绍。
 2. partitioning：分割模式，有三种：integer，fractional_even，fractional_odd。这三种分割模式，如图2、图3、图4所示。
+
 ![2](https://pic1.zhimg.com/80/v2-87029cee3fbdd447a97e188c2a52d2a2_hd.gif)
 
 图2：integer
