@@ -1,18 +1,18 @@
-!["pipeline"](https://pic2.zhimg.com/v2-3785f9c0621f81a80cdab6fbaa3d04b5_b.jpg)
+!["pipeline"](https://pic2.zhimg.com/v2-3785f9c0621f81a80cdab6fbaa3d04b5_b.jpg "图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12")
 
-<center>图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12</center>
+<center> 图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12 </center>
 
-# IA
+# Input Assembler Stage
 
 当我们使用曲面细分的时候，我们不再向IA阶段（Input Assembler Stage，输入装配阶段，从显存读取几何数据用来组合几何图元，例如三角面或线段）提交三角面，而是提交数个控制点的patch。
 三角形可以认为是有三个控制点的patch，所以我们依然可以提交常规的三角面网格。一个有四个控制点的四边形也可以被提交，但是在曲面细分阶段这些patch会被细分成三角面。
 当然我们还可以在一个patch中添加更多的控制点。例如，我们可以用多个控制点来调整贝塞尔曲线（Bezier curves），或者贝塞尔曲面。控制点越多，自由度越高。
 
-# VS
+# Vertex Shader
 
 控制点也会经过VS的处理，在这里，我们可以做一些对控制点的计算，例如动画或者物理计算。
 
-# HS
+# Hull Shader
 
 经过处理后的控制点会传到HS（对应于OpenGL Core的TCS，Tessellation Control Shader）,HS又会分为Const Hull Shader和Control Point Hull Shader。
 
@@ -76,15 +76,15 @@ return hout;
 
 ![2](https://pic1.zhimg.com/80/v2-87029cee3fbdd447a97e188c2a52d2a2_hd.gif)
 
-<center>图2：integer</center>
+<center> 图2：integer </center>
 
 ![3](https://pic1.zhimg.com/80/v2-00b8af0c4de4405d525ba6606f9cb24b_hd.gif)
 
-<center>图3：fractional_odd</center>
+<center> 图3：fractional_odd </center>
 
 ![4](https://pic2.zhimg.com/80/v2-092729346554f82f7e7fd56717e2f8f2_hd.gif)
 
-<center>图4：fractional_even</center>
+<center> 图4：fractional_even </center>
 
 3. outputtopology：输出拓扑结构。有三种：triangle_cw（顺时针环绕三角形）、triangle_ccw（逆时针环绕三角形）、line（线段）。
 4. outputcontrolpoints：输出的控制点的数量（每个图元），不一定与输入数量相同。
@@ -104,7 +104,7 @@ SV_TessFactor的长度为4，指定四条边各被分为多少段，SV_InsideTes
 
 ![5](https://pic2.zhimg.com/80/v2-c8a71cd56b5922e175e4b7c0d8206654_hd.png)
 
-<center>图5：SV_TessFactor:4,2,9,3 SV_InsideTessFactor:6,7</center>
+<center> 图5：SV_TessFactor:4,2,9,3 SV_InsideTessFactor:6,7 </center>
 
 
 ### tri
@@ -113,11 +113,11 @@ SV_TessFactor的长度为3，指定三条边各被分为多少段，SV_InsideTes
 
 ![6](https://pic4.zhimg.com/80/v2-c9b07f0b90604ce60e242d39bc2349e8_hd.png)
 
-<center>图6</center>
+<center> 图6 </center>
 
 ![7](https://pic2.zhimg.com/80/v2-e5ae5deba4275b691231eacd56059e3b_hd.png)
 
-<center>图7</center>
+<center> 图7 </center>
 
 
 整体分割，如果图8所示。
@@ -125,7 +125,7 @@ SV_TessFactor的长度为3，指定三条边各被分为多少段，SV_InsideTes
 
 ![8](https://pic1.zhimg.com/80/v2-4d52caa84ea507d65d767f237262091e_hd.png)
 
-<center>图8：SV_TessFactor:4,1,6 SV_InsideTessFactor:5</center>
+<center> 图8：SV_TessFactor:4,1,6 SV_InsideTessFactor:5 </center>
 
 
 ### isoline
@@ -134,9 +134,89 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 ![9](https://pic3.zhimg.com/80/v2-d2897dbffe7f4a0114469af369c81742_hd.png)
 
-<center>图9：SV_TessFactor:3,4</center>
+<center> 图9：SV_TessFactor:3,4 </center>
 
 ![10](https://pic4.zhimg.com/80/v2-3a5885bd4ffab81cb926725ce3352eae_hd.png)
 
-<center>图10：SV_TessFactor:6,2</center>
+<center> 图10：SV_TessFactor:6,2 </center>
 
+# Tessellation Stage
+
+曲面细分阶段，这个阶段是由硬件完成的，会根据ConstHS将patch分割成多个三角面或者线段。这些分割点会被传给下一个阶段DS，以供线性插值。
+
+对于不同的patch
+
+## quad
+
+顶点以UV坐标的形式传给DS，如图11所示。
+
+![11](https://pic1.zhimg.com/80/v2-4137fdf02af78b2f3342c0d2c01ca829_hd.png)
+
+<center> 图11 </center>
+
+## tri
+
+顶点以重心坐标（Barycentric coordinates[This link](https://en.wikipedia.org/wiki/Barycentric_coordinate_system#Barycentric_coordinates_on_triangles)）的形式(u, v, w)传给DS，如图12所示。
+
+![12](https://pic4.zhimg.com/80/v2-c409ca0f839a291ec6bd77b7f5f63b90_hd.png)
+
+<center> 图12 </center>
+
+## isoline
+
+顶点以UV坐标的形式传给DS，如图13所示。
+
+![13](https://pic3.zhimg.com/80/v2-38245d55762ee6551e77ec2aa8c4117f_hd.png)
+
+<center> 图13 </center>
+
+# Domain Shader
+
+从曲面细分阶段获取新创建的顶点和三角面（或线段）之后，便进入了DS（对应于OpenGL Core的TES，Tessellation Evaluation Shader）阶段。对于每个顶点，都会调用一次DS。一般来讲，这里会涉及到大量的计算，所有的顶点信息都会在这里重新计算，最后会将顶点坐标转换到投影空间。
+
+示例代码：
+```
+struct DomainOut
+{
+float4 PosH : SV_POSITION;
+};
+// The domain shader is called for every vertex
+created by the tessellator.
+// It is like the vertex shader after tessellation.
+[domain(“quad”)]
+DomainOut DS(PatchTess patchTess,
+float2 uv : SV_DomainLocation,
+const OutputPatch<HullOut, 4> quad)
+{
+DomainOut dout;
+// Bilinear interpolation.
+float3 v1 = lerp(quad[0].PosL, quad[1].PosL, uv.x);
+float3 v2 = lerp(quad[2].PosL, quad[3].PosL, uv.x);
+float3 p = lerp(v1, v2, uv.y);
+float4 posW = mul(float4(p, 1.0f), gWorld);
+dout.PosH = mul(posW, gViewProj);
+return dout;
+}
+```
+
+DS的参数：
+1. PatchTess：由ConstHS输入，细分参数。
+2. SV_DomainLocation：由曲面细分阶段阶段传入的顶点位置信息。
+3. OutputPatch<HullOut, 4>：由ControlPointHS传入的patch数据，尖括号的第二个参数与outputcontrolpoints对应。
+
+这里的patch类型是quad，先求当前顶点的坐标，然后转换到投影空间。
+如果patch类型是tri：
+```
+[domain(“tri”)]
+DomainOut DS(PatchTess patchTess,
+float3 uvw : SV_DomainLocation,
+const OutputPatch<HullOut, 3> tri)
+{
+DomainOut dout;
+// Bilinear interpolation.
+float3 p = tri[0] * uvw.x + tri[1] * uvw.y + tri[2] * uvw.z;
+float4 posW = mul(float4(p, 1.0f), gWorld);
+dout.PosH = mul(posW, gViewProj);
+return dout;
+}
+```
