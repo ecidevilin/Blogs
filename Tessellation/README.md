@@ -157,7 +157,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 顶点以UV坐标的形式传给DS，如图11所示。
 
-![11](https://pic1.zhimg.com/80/v2-449e216a4222b2f94023dc2d02788e33_hd.png)
+![11](https://pic1.zhimg.com/80/v2-4137fdf02af78b2f3342c0d2c01ca829_hd.png)
 
 <center> 图11 </center>
 
@@ -165,7 +165,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 顶点以重心坐标（[Barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system#Barycentric_coordinates_on_triangles)）的形式(u, v, w)传给DS，如图12所示。
 
-![12](https://pic2.zhimg.com/80/v2-5b338a40879759999a6dcfc39fe3a2b2_hd.png)
+![12](https://pic4.zhimg.com/80/v2-c409ca0f839a291ec6bd77b7f5f63b90_hd.png)
 
 <center> 图12 </center>
 
@@ -173,7 +173,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 顶点以UV坐标的形式传给DS，如图13所示。
 
-![13](https://pic1.zhimg.com/80/v2-751cfbcc6dbe4e7776a8769e35dc204f_hd.png)
+![13](https://pic3.zhimg.com/80/v2-38245d55762ee6551e77ec2aa8c4117f_hd.png)
 
 <center> 图13 </center>
 
