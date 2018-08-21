@@ -1,5 +1,5 @@
-!["pipeline"](https://pic2.zhimg.com/v2-3785f9c0621f81a80cdab6fbaa3d04b5_b.jpg "图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12")
-
+!["pipeline"](https://pic2.zhimg.com/v2-3785f9c0621f81a80cdab6fbaa3d04b5_b.jpg)
+图1：渲染管线，图片来源：Introduction to 3D Game Programming with DirectX 12
 
 # IA
 
