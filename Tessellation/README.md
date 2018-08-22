@@ -48,7 +48,7 @@ return pt;
 }
 ```
 
-InputPatch<VertexOut,4>尖括号中的4代表每个patch输入的控制点数量（这里是quad），由API设置。
+
 SV_TessFactor代表细分度，SV_InsideTessFactor代表内部细分度。至于如何细分，我们稍后会解释。
 
 ## ControlPointHS
@@ -98,8 +98,8 @@ return hout;
 5. patchconstantfunc：指定ConstHS。
 6. maxtessfactor：最大细分度，告知驱动程序shader用到的最大细分度，硬件可能会针对这个做出优化。Direct3D 11和OpenGL Core都至少支持64。
 然后是HS的参数：
-1. InputPatch：输入的patch。
-2. SV_OutputControlPointID：给出控制点的ID。
+1. InputPatch：输入的patch尖括号第二个参数，代表输入的控制点的数量（“quad”为4个），由API设置，并且ConstHS里对应的数值要与这里相同。
+2. SV_OutputControlPointID：给出控制点的ID，与outputcontrolpoints对应，例如outputcontrolpoints为4，那么i的取值就是[0,4)的整数。
 3. SV_PrimitiveID：给出patch的ID。
 
 下面着重展示一下SV_TessFactor和SV_InsideTessFactor在不同path类型上是如何细分的。
@@ -230,6 +230,9 @@ return dout;
 
 这里没有做任何的变形，只是将顶点坐标计算出来，最后渲染出来的结果跟没有做曲面细分的shader没有区别。
 我们可以使用贝塞尔曲线或曲面来改变三角面的形状，详情请参考文献1（或许会在后续文章中介绍，但愿……）。
+
+
+DS输出的数据，可能会先传给GS（Geometry Shader）进行进一步的计算（增加顶点、修改顶点位置，计算顶点属性）。也可以直接（当然首先要进行裁剪和光栅化）传给FS（Fragment Shader）进行片元着色。最后进入输出合并阶段，完成整个渲染管线。
 
 #参考文献
 
