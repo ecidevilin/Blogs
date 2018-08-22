@@ -173,7 +173,7 @@ SV_TessFactor长度为2，第0个元素指定线段的个数，第1个元素指�
 
 顶点以UV坐标的形式传给DS，如图13所示。
 
-![13](https://pic3.zhimg.com/80/v2-38245d55762ee6551e77ec2aa8c4117f_hd.png)
+![13](https://pic2.zhimg.com/80/v2-ebcb92ec3bcf6457e2a81234ba2c70c1_hd.jpg)
 
 <center> 图13 </center>
 
