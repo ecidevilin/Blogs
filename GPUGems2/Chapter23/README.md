@@ -5,16 +5,19 @@
 但是为了模拟和绘制更加逼真的头发，就需要绘制大量的发丝，而每个发丝都是一个单独的图元。
 Nalu中使用了4095根发丝（每根发丝都是由数个顶点组成的曲线）来绘制头发，共计由123000个顶点。因为无法实时的对所有的顶点进行动力学模拟和碰撞检测，所以原文引入了受控发丝的概念。总共有几百根受控发丝，经过一些计算之后，再对这些受控发丝进行插值，生成整个头发。
 
+
 原文主要分为三个部分：
-1. 头发几何体的创建
-2. 动力学模拟和碰撞检测
-3. 头发的着色
+1. 几何体
+2. 物理模拟
+3. 着色
+
+其中几何体是后面两个部分的基础，而物理和着色则是两个相对独立的部分。
 
 本文也按照这三部分简单的介绍一下物理头发的实现。
 
-# 头发几何体的创建
+# 几何体
 
-首先需要在3D建模软件中创建一个“头皮”模型，这个头皮在渲染时不可见的。受控发丝就是从头皮顶点开始，沿着法线“生长”出来的。所谓“生长”，就是从头皮顶点开始，添加N个顶点，形成一个曲线。不过这些顶点并不是等距的，离头皮越远，两个顶点的距离越大（即线段越长）。
+为了创建头发的几何体，我们需要一个辅助模型。首先要在3D建模软件中创建一个“头皮”模型，但是这个头皮在渲染时不可见的。受控发丝就是从头皮顶点开始，沿着法线“生长”出来的。所谓“生长”，就是从头皮顶点开始，添加N个顶点，形成一个曲线（折线）。不过这些顶点并不是等距的，离头皮越远，两个顶点的距离越大（即线段越长）。
 
 ![scalp](pic/scalp.png)
 
@@ -28,13 +31,16 @@ Nalu中使用了4095根发丝（每根发丝都是由数个顶点组成的曲线
 示意图：
 ![steps](pic/steps.png)
 
-原文使用曲面细分将曲线的顶点数从7增加到了36个，但是并没有提及是按照什么样的规则增加的。因为“植发”的时候，曲线顶点不是等距的，所以个人推测，这里细分的时候，应该也不是均匀细分的，即离头皮越远，细分度越大（硬件曲面细分是在Direct11/OpenGL4.0的新特性，Direct11/OpenGL4.0是2009/2010年发布的，而Nalu demo是2004年发布的，所以这里是软件的曲面细分）。
+原文使用曲面细分将曲线的顶点数从7增加到了36个，但是并没有提及是按照什么样的规则增加的。因为“植发”的时候，曲线顶点不是等距的，所以个人推测，这里细分的时候，应该也不是均匀细分的，即离头皮越远，细分度越大（硬件曲面细分是在Direct11/OpenGL4.0的新特性，Direct11/OpenGL4.0是2009/2010年发布的，而Nalu demo是2004年发布的，所以这里是NVIDA自己实现的曲面细分）。
 
 
 为了增加头发的密度，需要进行插值来生成更多的曲线。三角形的每个顶点对应一条曲线（控制发丝），使用重心坐标系，对三角形的三条曲线进行插值，新生成的曲线的顶点数量跟原来的相同。
 ![interpolation](pic/interpolation.png)
 
-关于重心坐标系：设三个系数b0、b1、b2，都在[0,1]范围内，且b0+b1+b2=1。对于一个三角形T的三个顶点P0、P1、P2，有
+
+**重心坐标系**
+
+设三个系数b0、b1、b2，都在[0,1]范围内，且b0+b1+b2=1。对于一个三角形T的三个顶点P0、P1、P2，有
 
 P = b0P0 + b1P1 + b2P2
 
@@ -43,12 +49,114 @@ P = b0P0 + b1P1 + b2P2
 其中，(b0, b1, b2)称为点P（在三角形T的）重心坐标系下的位置。
 
 
-# 动力学模拟和碰撞检测
+# 物理模拟
 
-# 头发的着色
+## 动力学模拟
+
+Nalu的头发动力学是基于粒子系统的，每个控制发丝的顶点被当做一个粒子。原文使用了Verlet积分来计算粒子的运动。
+
+**Verlet积分**
+
+Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
+![verlet](pic/verlet.png)
+
+其中x为粒子当前位置，Δt为两个时刻的时间差，x* 为上一时刻的位置，x'为下一刻的位置，a为加速度。
+
+但是，使用Verlet积分模拟粒子运动的时候，因为只是对单个粒子进行模拟，并没有（同一条曲线上的）其他粒子的信息，所以头发的长度会发生变化。这里就要为头发增加约束，当两个相邻的粒子太近的时候，就让它们分开，太远的时候就收缩线段。然而，需要同时满足多个约束，就需要多次迭代收敛到期望的结果。
+![constraint](pic/constraint.png)
+
+## 碰撞检测
+
+对于物理头发来讲，另一个比较棘手的就是碰撞了。为了防止头发穿过头部和身体，所以需要添加碰撞检测。原文中使用了一套球体，作为角色模型的碰撞几何体。
+![collision](pic/collision.png)
+
+而对于受控发丝，不能简单的使用点来检测对象，于是原文使用了“珍珠结构”。由此，就将问题转换为了球体与球体之间的碰撞关系。
+![pearl](pic/pearl.png)
+
+**彩蛋——鱼鳍**
+
+![fins](pic/fins.png)
+
+原文还爆出了一个彩蛋，这里的动力学模拟不但可以模拟头发的运动，还可以模拟鱼鳍（布料）。本身鱼鳍是蒙皮的，也就是由骨骼控制的，但是这样只能做刚体变换，并不能柔软变形。但是并不是完全的物理模拟，原文希望鱼鳍的根部更加的硬（更多的刚体变换），末梢更加的柔软（更多的物理模拟），所以为鱼鳍添加了一个权重映射图，来指定鱼鳍上的每个顶点混合了多少比率的物理模拟。
+![cloth](pic/cloth.png)
+![finalFins](pic/finalFins.png)
+
+# 着色
+
+原文中，头发的着色分为两个部分：反射和自阴影。
+
+## 发射
+
+原文中使用了[Marschner et al. 2003]中介绍的反射模型。
+[Marschner et al. 2003]将发丝当做一个半透明的椭圆柱体，柱体的侧面是锯齿状的表面。
+![hairModel](pic/hairModel.png)
+
+使用一个双向散射方程来描述头发的散射率（出射方向的单位辐射度与入射方向的单位照度的比率）。
+![bsf](pic/bsf.png)
+
+其中ω<sub>i</sub>为入射方向ω<sub>r</sub>为出射方向，这两个方向使用球坐标系(θ,φ)表示。所以这是一个四维度的方程，无法得到GPU的支持。
+而且最终需要对于所有的ω<sub>i</sub>进行积分来计算ω<sub>r</sub>上的辐射度。
+![scatteringIntegral](pic/scatteringIntegral.png)
+
+所以需要对整个计算过程进行简化，才能在计算机上运算。
+![crossSection](pic/crossSection.png)
+为了简化，只计算对结果贡献最多的三条光线路径。
+1. R：直接反射
+2. TT：折射进入发丝再折射出来
+3. TRT：折射进入发丝，经过内部反射，再折射出来
+
+然后再将每条路径上的散射方程简化为两个方程的乘积，最后得到：
+![newFunc](pic/newFunc.png)
+其中M使用了高斯分布来实现，表明反射只发生在高光椎体范围内，θ<sub>h</sub>=θ<sub>i</sub>+θ<sub>o</sub>。N代表了方位角散射方程，θ<sub>d</sub>表示出射光线与投影平面的倾角,η'表示折射指数。cos<sup>2</sup>θ<sub>d</sub>将高光椎体在的投影立体角纳入计算。
+具体推导和计算请见参考文献3。
+计算cosθ<sub>d</sub>并对三条路径分别计算M和N，将它们存到纹理里。
+其中M<sub>R</sub>、M<sub>TT</sub>、M<sub>TRT</sub>都为单通道数据，将它们和cosθ<sub>d</sub>一起存到第一张纹理中。
+N<sub>R</sub>为单通道，N<sub>TT</sub>、N<sub>TRT</sub>为三通道，原文假设N<sub>TT</sub>=N<sub>TRT</sub>，这样就可以把它们存到第二张纹理中。
+但实际在最终实现上，却与原文稍有不同。如一下代码所示：
+VS部分代码
+```
+  /* Compute longitudinal angles */
+  float2 uv1;
+  uv1.x = dot(objLightDir, objTangent);
+  uv1.y = dot(objEyeDir, objTangent);
+  v2f.angles.xy = 0.5 + 0.5*uv1;
+
+  /* Compute the azimuthal angle */
+  float3 lightPerp = objLightDir - uv1.x * objTangent;  
+  float3 eyePerp = objEyeDir - uv1.y * objTangent;  
+  float cosPhi = dot(eyePerp, lightPerp) * rsqrt(dot(eyePerp, eyePerp) * dot(lightPerp, lightPerp));
+  v2f.angles.z = 0.5*cosPhi + 0.5;
+```
+FS部分代码
+```
+  /* Compute the longitudinal reflectance component */
+  half2 uv1 = v2f.angles.xy;
+  half4 m = h4tex2D(lookup1fixed, uv1);
+
+  /* Compute the azimuthal reflectance component */
+  half2 uv2;
+  uv2.x = m.w;
+  uv2.y = v2f.angles.z;
+  half4 ntt = h4tex2D(lookup2fixed, uv2);
+
+  /* Combine longitudinal and azimuthal reflectance */ 
+  half3 lighting;
+  lighting = (m.r * ntt.a * Rcol.r).xxx;	  // Primary highlight  
+  lighting += m.b * ntt.rgb * TTcol.r;      // Transmittance (using MTRT instead of MTT)
+  lighting += v2f.diffuseColor.rgb;	        // Diffuse lighting
+```
+
+**伪彩蛋——实体几何**
+原文中提到了，除了使用折线作为反射模型的几何体之外，也可以将这种方法扩展到实体几何上。使用表面的一个主切线，而不是线段的切线，来参与计算。并且使用(wrap+dot(N,L))/(1+wrap)来引入自遮挡效果。其中N为表面法线，L为光的方向，wrap是一个[0,1]之间的参数，用来调整光与表面的交互。
+
+## 自阴影
 
 
-
-
-
-
+# 参考文献 
+1. Hair Animation and Rendering in the Nalu Demo, GPU Gems 2
+2. Advanced Character Physics
+3. Light Scattering from Human Hair Fibers
+4. https://en.wikipedia.org/wiki/Verlet_integration
+5. http://www.cnblogs.com/miloyip/archive/2011/06/14/alice_madness_returns_hair.html
+6. Real-Time Rendering
+7. https://www.nvidia.cn/coolstuff/demos#!/geforce-6/nalu
