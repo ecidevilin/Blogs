@@ -146,6 +146,9 @@ FS部分代码
   lighting += v2f.diffuseColor.rgb;	        // Diffuse lighting
 ```
 
+散射效果：
+[!reflectance](pic/reflectance.png)
+
 **伪彩蛋——实体几何**
 原文中提到了，除了使用折线作为反射模型的几何体之外，也可以将这种方法扩展到实体几何上。使用表面的一个主切线，而不是线段的切线，来参与计算。并且使用(wrap+dot(N,L))/(1+wrap)来引入自遮挡效果。其中N为表面法线，L为光的方向，wrap是一个[0,1]之间的参数，用来调整光与表面的交互。
 
@@ -154,17 +157,42 @@ FS部分代码
 在传统的基于深度的阴影映射技术中，首先以光源的方向为观察方向绘制深度图，然后在实际绘制的时候，对深度图进行采样，来计算像素的阴影。但是，因为是离散采样，对于头发这种情况（有很多小的图元组成的密集体积对象），阴影映射会产生严重的走样。并且，在深度测试的时候，只会有两种结果（是/否），所以阴影映射无法呈现散射的半透明效果。
 于是原文使用了透明度阴影映射的技术：
 ![osm](pic/osm.png)
-T表示光线的透射率，σ表示当前点(x,y,z)的不透明（厚）度，r表示泯灭系数，表示在当前点上单位距离上光线被吸收的概率。
-但是这是一个三维度的函数。所以，原文选取了N个离散的z值来作为关键点，中间的z值使用下面的方法进行插值。
+T表示光线的透射率，σ表示当前点(x,y,z)的不透明（厚）度，r表示消光系数，表示在当前点上单位距离上光线被吸收的概率。
+但是这是一个三维度的函数。所以，原文将灯光空间在Z轴上等分为N层，选取了N个离散的z值来作为分割平面，中间的σ值使用下面的方法进行插值。
 ![zinterpolation](pic/zinterpolation.png)
 其中z<sub>i</sub> < z < z<sub>i+1</sub>。
 这里N=16，z<sub>0</sub>在灯光空间的近切面上，z<sub>15</sub>在灯光空间的远切面上。并将空间进行等分。
 dz=(z<sub>15</sub>-z<sub>0</sub>)/16
 z<sub>i</sub>=z<sub>0</sub>+idz。
-需要注意的是，因为在头发体积对象之外时，r=0，所以σ(x,y,z<sub>0</sub>)恒等于0。所以只需要将z=z<sub>1</sub>……z<sub>15</sub>对应的σ值（纹理中）。
-原文使用了一个累加来近似积分计算。
+需要注意的是，因为在头发体积对象之外时，r=0，所以σ(x,y,z<sub>0</sub>)恒等于0。所以只需要将z=z<sub>1</sub>...z<sub>15</sub>对应的σ值（纹理中）。
+在灯光空间中遍历两个深度值之间的发丝，计算消光系数，并累计起来得到σ(x,y,z<sub>i</sub>)。
+σ(x,y,z<sub>i</sub>)可以渲染到纹理的一个通道里，然后使用MRT技术，一次将所有的σ纹理绘制出来。
+最后在着色器里对这些纹理进行采样，并计算阴影值。
 ![sum](pic/sum.png)
+VS部分代码
+```
+// depth1 contains z0...z3, inverseDeltaD = 1/dz.
+v2f.OSM1weight = max(0.0.xxxx, 1- abs(dist - depth1) * inverseDeltaD);
+v2f.OSM2weight = max(0.0.xxxx, 1- abs(dist - depth2) * inverseDeltaD);
+v2f.OSM3weight = max(0.0.xxxx, 1- abs(dist - depth3) * inverseDeltaD);
+v2f.OSM4weight = max(0.0.xxxx, 1- abs(dist - depth4) * inverseDeltaD);
+```
+FS部分代码
+```
+／* Compute the total density */
+half density = 0;
+density  = dot(h4tex2D(OSM1, v2f.shadowCoord.xy), v2f.OSM1weight);
+density += dot(h4tex2D(OSM2, v2f.shadowCoord.xy), v2f.OSM2weight);
+density += dot(h4tex2D(OSM3, v2f.shadowCoord.xy), v2f.OSM3weight);
+density += dot(h4tex2D(OSM4, v2f.shadowCoord.xy), v2f.OSM4weight);
+half shadow = exp(-5.5 * density);
+```
+无阴影和有阴影的头发的对比图：
+![shadowhair](pic/shadowhair.png)
 
+# 总结与展望
+
+原文的总结与展望说了很多高大上的话，毕竟是NVIDIA。作为一个小彩笔，我只希望我早日能做出来适用于手机平台的物理毛发。
 
 
 # 参考文献 
