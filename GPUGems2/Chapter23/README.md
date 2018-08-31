@@ -151,12 +151,28 @@ FS部分代码
 
 ## 自阴影
 
+在传统的基于深度的阴影映射技术中，首先以光源的方向为观察方向绘制深度图，然后在实际绘制的时候，对深度图进行采样，来计算像素的阴影。但是，因为是离散采样，对于头发这种情况（有很多小的图元组成的密集体积对象），阴影映射会产生严重的走样。并且，在深度测试的时候，只会有两种结果（是/否），所以阴影映射无法呈现散射的半透明效果。
+于是原文使用了透明度阴影映射的技术：
+![osm](pic/osm.png)
+T表示光线的透射率，σ表示当前点(x,y,z)的不透明（厚）度，r表示泯灭系数，表示在当前点上单位距离上光线被吸收的概率。
+但是这是一个三维度的函数。所以，原文选取了N个离散的z值来作为关键点，中间的z值使用下面的方法进行插值。
+![zinterpolation](pic/zinterpolation.png)
+其中z<sub>i</sub> < z < z<sub>i+1</sub>。
+这里N=16，z<sub>0</sub>在灯光空间的近切面上，z<sub>15</sub>在灯光空间的远切面上。并将空间进行等分。
+dz=(z<sub>15</sub>-z<sub>0</sub>)/16
+z<sub>i</sub>=z<sub>0</sub>+idz。
+需要注意的是，因为在头发体积对象之外时，r=0，所以σ(x,y,z<sub>0</sub>)恒等于0。所以只需要将z=z<sub>1</sub>……z<sub>15</sub>对应的σ值（纹理中）。
+原文使用了一个累加来近似积分计算。
+![sum](pic/sum.png)
+
+
 
 # 参考文献 
 1. Hair Animation and Rendering in the Nalu Demo, GPU Gems 2
 2. Advanced Character Physics
 3. Light Scattering from Human Hair Fibers
-4. https://en.wikipedia.org/wiki/Verlet_integration
-5. http://www.cnblogs.com/miloyip/archive/2011/06/14/alice_madness_returns_hair.html
-6. Real-Time Rendering
-7. https://www.nvidia.cn/coolstuff/demos#!/geforce-6/nalu
+4. Opacity Shadow Maps
+5. Real-Time Rendering
+6. https://en.wikipedia.org/wiki/Verlet_integration
+7. http://www.cnblogs.com/miloyip/archive/2011/06/14/alice_madness_returns_hair.html
+8. https://www.nvidia.cn/coolstuff/demos#!/geforce-6/nalu
