@@ -151,6 +151,8 @@ Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
 其中M<sub>R</sub>、M<sub>TT</sub>、M<sub>TRT</sub>都为单通道数据，将它们和cosθ<sub>d</sub>一起存到第一张纹理中。
 N<sub>R</sub>为单通道，N<sub>TT</sub>、N<sub>TRT</sub>为三通道，原文假设N<sub>TT</sub>=N<sub>TRT</sub>，这样就可以把它们存到第二张纹理中。
 
+![lookup](pic/lookup.png)
+
 但实际在最终实现上，却与原文稍有不同。如一下代码所示：
 
 VS部分代码
