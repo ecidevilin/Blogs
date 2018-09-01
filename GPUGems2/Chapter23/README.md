@@ -19,7 +19,7 @@ Nalu中使用了4095根发丝（每根发丝都是由数个顶点组成的曲线
 
 为了创建头发的几何体，我们需要一个辅助模型。首先要在3D建模软件中创建一个“头皮”模型，但是这个头皮不会被渲染出来。受控发丝就是从头皮顶点开始，沿着法线“生长”出来的。所谓“生长”，就是从头皮顶点开始，添加N个顶点，形成一个曲线（折线）。不过这些顶点并不是等距的，离头皮越远，两个顶点的距离越大（即线段越长）。
 
-![scalp](pic/scalp.png)
+![scalp](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/scalp.png)
 
 生成受控发丝之后，就可以用它们进行动力学模拟和碰撞检测，来生成程序性动画。不过如果为这些动画添加适当的人为控制的话，会得到更加逼真的效果（可惜原文中并没有讲如何添加人为控制和添加什么样的人为控制）。
 
@@ -27,18 +27,18 @@ Nalu中使用了4095根发丝（每根发丝都是由数个顶点组成的曲线
 
 流程图：
 
-![data flow](pic/dataflow.png)
+![data flow](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/dataflow.png)
 
 示意图：
 
-![steps](pic/steps.png)
+![steps](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/steps.png)
 
 原文使用曲面细分将曲线的顶点数从7增加到了36个，但是并没有提及是按照什么样的规则增加的。因为“植发”的时候，曲线顶点不是等距的，所以个人推测，这里细分的时候，应该也不是均匀细分的，即离头皮越远，细分度越大（硬件曲面细分是在Direct11/OpenGL4.0的新特性，Direct11/OpenGL4.0是2009/2010年发布的，而Nalu demo是2004年发布的，所以这里是NVIDA自己实现的曲面细分）。
 
 
 为了增加头发的密度，需要进行插值来生成更多的曲线。三角形的每个顶点对应一条曲线（控制发丝），使用重心坐标系计算新发丝的根部顶点，对三角形的三条曲线进行插值，新生成的曲线的顶点数量跟原来的相同。
 
-![interpolation](pic/interpolation.png)
+![interpolation](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/interpolation.png)
 
 
 **重心坐标系**
@@ -62,34 +62,34 @@ Nalu的头发动力学是基于粒子系统的，每个控制发丝的顶点被�
 
 Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
 
-![verlet](pic/verlet.png)
+![verlet](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/verlet.png)
 （公式 1）
 
 其中x为粒子当前位置，Δt为两个时刻的时间差，x* 为上一时刻的位置，x'为下一刻的位置，a为加速度。
 
 但是，使用Verlet积分模拟粒子运动的时候，因为只是对单个粒子进行模拟，并没有（同一条曲线上的）其他粒子的信息，所以头发的长度会发生变化。这里就要为头发增加约束，当两个相邻的粒子太近的时候就拉伸线段，太远的时候就收缩线段。然而，为了同时满足多个约束，就需要多次迭代收敛到期望的结果。
 
-![constraint](pic/constraint.png)
+![constraint](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/constraint.png)
 
 ## 碰撞检测
 
 为了防止头发穿过头部和身体，就需要进行碰撞检测。原文中使用了一套球体，作为角色模型的碰撞几何体。
 
-![collision](pic/collision.png)
+![collision](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/collision.png)
 
 而对于受控发丝，不能简单的使用点来检测对象，于是原文使用了“珍珠结构”，将顶点视为一个球体。由此，就将问题转换为了球体与球体之间的碰撞关系。
 
-![pearl](pic/pearl.png)
+![pearl](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/pearl.png)
 
 **彩蛋——鱼鳍**
 
-![fins](pic/fins.png)
+![fins](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/fins.png)
 
 原文还爆出了一个彩蛋，这里的动力学模拟不但可以模拟头发的运动，还可以模拟鱼鳍（布料）。本身鱼鳍是蒙皮的，由骨骼来控制，但是这样只能做刚体变换，并不能发生柔软变形。原文希望鱼鳍的根部更加的硬（更多的刚体变换），末梢更加的柔软（更多的物理模拟），而不是完全的物理模拟，所以为鱼鳍添加了一个权重映射图，来指定鱼鳍上的每个顶点混合了多少比率的物理模拟。
 
-![cloth](pic/cloth.png)
+![cloth](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/cloth.png)
 
-![finalFins](pic/finalFins.png)
+![finalFins](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/finalFins.png)
 
 # 着色
 
@@ -100,22 +100,22 @@ Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
 原文中使用了[Marschner et al. 2003]中介绍的反射模型。
 [Marschner et al. 2003]将发丝当做一个半透明的椭圆柱体，柱体的侧面是锯齿状的表面。
 
-![hairModel](pic/hairModel.png)
+![hairModel](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/hairModel.png)
 
 使用一个双向散射方程来描述头发的散射率（出射方向的单位辐射度与入射方向的单位照度的比率）。
 
-![bsf](pic/bsf.png)
+![bsf](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/bsf.png)
 （公式2）
 
 其中ω<sub>i</sub>为入射方向ω<sub>r</sub>为出射方向，这两个方向分别使用球坐标系(θ,Φ)表示。这是一个四维度的方程，无法得到GPU的支持。
 而且最终需要对于所有的ω<sub>i</sub>进行积分来计算ω<sub>r</sub>上的辐射度。
 
-![scatteringIntegral](pic/scatteringIntegral.png)
+![scatteringIntegral](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/scatteringIntegral.png)
 （公式3）
 
 所以需要对整个计算过程进行简化，才能在计算机上运算。
 
-![crossSection](pic/crossSection.png)
+![crossSection](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/crossSection.png)
 
 为了简化，只计算对结果贡献最多的三条光线路径。
 1. R：直接反射
@@ -124,7 +124,7 @@ Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
 
 然后再将每条路径上的散射方程简化为两个方程的乘积，最后得到：
 
-![newFunc](pic/newFunc.png)
+![newFunc](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/newFunc.png)
 （公式4）
 
 其中：
@@ -141,7 +141,7 @@ Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
 
 原文对这个公式进行了修改：
 
-![spmn](pic/spmn.png)
+![spmn](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/spmn.png)
 （公式5）
 
 据我猜测，M使用了以θ<sub>i</sub>和θ<sub>r</sub>为变量的二维高斯分布来代替，而将N和cos<sup>2</sup>θ<sub>d</sub>合并在了一起。而Φ<sub>d</sub>（公式5）实际上是Φ（公式4）。（还需要进一步研究来求证。）
@@ -151,7 +151,7 @@ Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
 其中M<sub>R</sub>、M<sub>TT</sub>、M<sub>TRT</sub>都为单通道数据，将它们和cosθ<sub>d</sub>一起存到第一张纹理中。
 N<sub>R</sub>为单通道，N<sub>TT</sub>、N<sub>TRT</sub>为三通道，原文假设N<sub>TT</sub>=N<sub>TRT</sub>，这样就可以把它们存到第二张纹理中。
 
-![lookup](pic/lookup.png)
+![lookup](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/lookup.png)
 
 但实际在最终实现上，却与原文稍有不同。如一下代码所示：
 
@@ -193,7 +193,7 @@ FS部分代码
 
 散射效果：
 
-![reflectance](pic/reflectance.png)
+![reflectance](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/reflectance.png)
 
 **伪彩蛋——实体几何**
 
@@ -205,14 +205,14 @@ FS部分代码
 
 于是原文使用了透明度阴影映射的技术：
 
-![osm](pic/osm.png)
+![osm](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/osm.png)
 （公式6）
 
 T表示光线的透射率，σ表示当前点(x,y,z)的不透明（厚）度，r表示消光系数，表示在当前点上单位距离上光线被吸收的概率。
 
 但是这是一个三维度的函数。所以，原文将灯光空间在Z轴上等分为N层，选取了N个离散的z值来作为分割平面，中间的σ值使用下面的方法进行插值。
 
-![zinterpolation](pic/zinterpolation.png)
+![zinterpolation](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/zinterpolation.png)
 （公式7）
 
 其中z<sub>i</sub> < z < z<sub>i+1</sub>。
@@ -231,7 +231,7 @@ z<sub>i</sub>=z<sub>0</sub>+idz。
 
 最后在着色器里对这些纹理进行采样，并计算阴影值。
 
-![sum](pic/sum.png)
+![sum](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/sum.png)
 （公式8）
 
 VS部分代码
@@ -258,7 +258,7 @@ half shadow = exp(-5.5 * density);
 
 无阴影和有阴影的头发的对比图：
 
-![shadowhair](pic/shadowhair.png)
+![shadowhair](https://github.com/ecidevilin/Blogs/blob/master/GPUGems2/Chapter23/pic/shadowhair.png)
 
 # 后记
 
