@@ -133,9 +133,9 @@ Verlet积分是用来求解牛顿运动方程的。对于一个粒子：
 3. N代表了方位角散射方程。
 4. Φ=Φ<sub>r</sub>-Φ<sub>i</sub>。
 5. θ<sub>d</sub>=(θ<sub>r</sub>-θ<sub>i</sub>)/2。
-4. Φ<sub>h</sub>=(Φ<sub>r</sub>+Φ<sub>i</sub>)/2。
-6. η'表示折射指数。
-7. cos<sup>2</sup>θ<sub>d</sub>将高光椎体在的投影立体角纳入计算。
+6. Φ<sub>h</sub>=(Φ<sub>r</sub>+Φ<sub>i</sub>)/2。
+7. η'表示折射指数。
+8. cos<sup>2</sup>θ<sub>d</sub>将高光椎体在的投影立体角纳入计算。
 
 具体推导和计算请见参考文献3。
 
