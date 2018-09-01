@@ -273,3 +273,4 @@ half shadow = exp(-5.5 * density);
 6. https://en.wikipedia.org/wiki/Verlet_integration
 7. http://www.cnblogs.com/miloyip/archive/2011/06/14/alice_madness_returns_hair.html
 8. https://www.nvidia.cn/coolstuff/demos#!/geforce-6/nalu
+9. https://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
