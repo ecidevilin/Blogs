@@ -11,7 +11,7 @@
 
 本文将讨论一种动态的网格简化算法。这种算法的好处在于，美术只需要提供一个高模，程序便可以自动的生成量级不同的低模。
 
-原文链接：[A Simple, Fast, and Effective Polygon Reduction Algorithm](http://dev.gameres.com/Program/Visual/3D/PolygonReduction.pdf)（感谢UWA答主马古斯提供的文章）
+原文链接：[A Simple, Fast, and Effective Polygon Reduction Algorithm](http://dev.gameres.com/Program/Visual/3D/PolygonReduction.pdf)（感谢UWA答主马古斯提供的文章和思路）
 
 # 三角边坍缩
 
