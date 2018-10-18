@@ -25,7 +25,7 @@
 
 但是如何选择要移除的点，才能尽可能小的影响模型的外观呢？这里就需要用到坍缩代价计算公式。
 
-[//]:cost(u,v)=||u-v|| \times \max \limits_{f \in Tu} \{\min \limits_{n \in Tuv}\{(1-f.normal \cdot n.normal) \div 2\}\}
+[comment]: cost(u,v)=||u-v|| \times \max \limits_{f \in Tu} \{\min \limits_{n \in Tuv}\{(1-f.normal \cdot n.normal) \div 2\}\}
 
 ![公式1](https://www.zhihu.com/equation?tex=cost(u%2Cv)%3D%7C%7Cu-v%7C%7C%20%5Ctimes%20%5Cmax%20%5Climits_%7Bf%20%5Cin%20Tu%7D%20%5C%7B%5Cmin%20%5Climits_%7Bn%20%5Cin%20Tuv%7D%5C%7B(1-f.normal%20%5Ccdot%20n.normal)%20%5Cdiv%202%5C%7D%5C%7D&preview=true)
 
