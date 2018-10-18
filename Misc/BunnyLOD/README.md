@@ -117,7 +117,7 @@ https://github.com/ecidevilin/UnityMeshSimplify
 1. [A Simple, Fast, and Effective Polygon Reduction Algorithm](http://dev.gameres.com/Program/Visual/3D/PolygonReduction.pdf)
 2. [BunnyLod](https://download.csdn.net/download/ecidevilin/10729117)
 3. [MeshSimplify](https://assetstore.unity.com/packages/tools/modeling/mesh-simplify-43658)
-4. [UWA问答：List的ToArray有什么办法能避免内存分配吗？]https://answer.uwa4d.com/question/5b1f437c09749726e4188e5f
+4. [UWA问答：List的ToArray有什么办法能避免内存分配吗？](https://answer.uwa4d.com/question/5b1f437c09749726e4188e5f)
 5. Real-Time Rendering, 3rd Edition
 6. 算法导论
 
