@@ -11,6 +11,7 @@
 
 本文将讨论一种动态的网格简化算法。这种算法的好处在于，美术只需要提供一个高模，程序便可以自动的生成量级不同的低模。
 
+原文链接：[A Simple, Fast, and Effective Polygon Reduction Algorithm](http://dev.gameres.com/Program/Visual/3D/PolygonReduction.pdf)（感谢UWA答主马古斯提供的文章）
 
 # 三角边坍缩
 
@@ -33,6 +34,7 @@ cost(u,v)=||u-v|| \times \max \limits_{f \in Tu} \{\min \limits_{n \in Tuv}\{(1-
 上面公式表示将u坍缩到v（移除u）所需要的代价。第一部分是边的长度，直观上讲，在模型简化过程中，小的细节应该优先被移除。第二部分是u点周围的曲率变化，理论上曲率变化越小的顶点，所处的区域越平坦，应该优先被移除。需要注意的是，将u坍缩到v和将v坍缩到u的代价可能不一样。
 
 通过这个公式，我们就可以对每个点计算坍缩到其相邻点的代价，然后选取坍缩代价最小的相邻点作为其坍缩目标。
+
 # 实现细节
 
 根据以上的描述，可以将实现分为以下步骤：
@@ -58,6 +60,7 @@ cost(u,v)=||u-v|| \times \max \limits_{f \in Tu} \{\min \limits_{n \in Tuv}\{(1-
 6. 令permutation[u.index] = 当前顶点数量，令vertex_map[u.index] = v.index (如果没有坍缩目标，则赋值为-1)。
 7. 判断当前顶点总数是否大于0，是则重复第5步。
 
+permutation保存了每个顶点被移除的倒数次序（1是最后被移除的，最大的是第一个被移除的），vertex_map保存了每个顶点的坍缩目标的位置。
 
 ## 运行时
 
