@@ -88,7 +88,7 @@ permutation保存了每个顶点被移除的倒数次序（1是最后被移除�
 
 # 完整实现
 
-https://github.com/ecidevilin/UnityMeshSimplify
+https://lab.uwa4d.com/lab/5b55ed36d7f10a201fd75b4e
 
 # 效果展示
 
