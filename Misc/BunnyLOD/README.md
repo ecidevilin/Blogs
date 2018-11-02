@@ -17,7 +17,7 @@
 
 这里使用了三角边坍缩的方法来进行网格简化，将两个顶点合并成一个顶点，如图1所示。
 
-![EdgeCollapse](pic/EdgeCollapse.png) 
+![EdgeCollapse](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/EdgeCollapse.png?raw=true) 
 
 对于要坍缩的边uv，删除这条边两侧的面A和面B，用v来替换u，连接v和u的其他邻居点，并删除u。其中v称为u的**坍缩目标**。
 
@@ -26,7 +26,7 @@
 但是如何选择要移除的点，才能尽可能小的影响模型的外观呢？这里就需要用到**坍缩代价**计算公式。
 
 
-![公式1](https://www.zhihu.com/equation?tex=cost(u%2Cv)%3D%7C%7Cu-v%7C%7C%20%5Ctimes%20%5Cmax%20%5Climits_%7Bf%20%5Cin%20Tu%7D%20%5C%7B%5Cmin%20%5Climits_%7Bn%20%5Cin%20Tuv%7D%5C%7B(1-f.normal%20%5Ccdot%20n.normal)%20%5Cdiv%202%5C%7D%5C%7D&preview=true)
+<img src=https://www.zhihu.com/equation?tex=cost(u%2Cv)%3D%7C%7Cu-v%7C%7C%20%5Ctimes%20%5Cmax%20%5Climits_%7Bf%20%5Cin%20Tu%7D%20%5C%7B%5Cmin%20%5Climits_%7Bn%20%5Cin%20Tuv%7D%5C%7B(1-f.normal%20%5Ccdot%20n.normal)%20%5Cdiv%202%5C%7D%5C%7D&preview=true>
 
 
 其中Tu是包含顶点u的三角形的集合，Tuv是同时包含顶点u和顶点v的三角形的集合。
@@ -43,7 +43,7 @@
 3. 替换坍缩代价最小的点，并重新计算相邻点的坍缩代价和坍缩目标，更新有序列表。
 4. 判断当前顶点数量是否大于目标数量，是则重复第3步。
 
-![Reduction](pic/Reduction.png)
+![Reduction](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Reduction.png?raw=true)
 
 显然，在游戏中实时的进行以上步骤是不现实的，尤其是第2步，相当于对整个模型的所有顶点遍历了多次。所以，要将它拆分成离线烘焙和运行时两个部分。
 
@@ -96,21 +96,21 @@ https://lab.uwa4d.com/lab/5b55ed36d7f10a201fd75b4e
 
 面数分别为3890（原）、1960、962、459、263。
 
-![Allosaurus3890](pic/Allosaurus3890.png) 
-![Allosaurus1960](pic/Allosaurus1960.png) 
-![Allosaurus962](pic/Allosaurus962.png) 
-![Allosaurus459](pic/Allosaurus459.png) 
-![Allosaurus263](pic/Allosaurus263.png) 
+![Allosaurus3890](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Allosaurus3890.png?raw=true) 
+![Allosaurus1960](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Allosaurus1960.png?raw=true) 
+![Allosaurus962](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Allosaurus962.png?raw=true) 
+![Allosaurus459](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Allosaurus459.png?raw=true) 
+![Allosaurus263](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Allosaurus263.png?raw=true) 
 
 ## 巨魔
 
 面数分别为13432（原）、6723、3415、1634、788。
 
-![Troll13432](pic/Troll13432.png) 
-![Troll6723](pic/Troll6723.png) 
-![Troll3415](pic/Troll3415.png) 
-![Troll1634](pic/Troll1634.png) 
-![Troll788](pic/Troll788.png) 
+![Troll13432](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Troll13432.png?raw=true) 
+![Troll6723](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Troll6723.png?raw=true) 
+![Troll3415](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Troll3415.png?raw=true) 
+![Troll1634](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Troll1634.png?raw=true) 
+![Troll788](https://github.com/ecidevilin/Blogs/blob/master/Misc/BunnyLOD/pic/Troll788.png?raw=true) 
 
 # 参考文献
 
