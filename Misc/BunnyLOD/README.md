@@ -1,4 +1,4 @@
-# 网格简化
+**本文首发自UWA博客，原文地址：https://blog.uwa4d.com/archives/USparkle_Dynamicmesh.html**
 
 在游戏开发中，我们有时需要对美术同学给出的模型进行简化。目的是在减少面数的同时，尽可能的维持模型的外观。这种技术可以用在LOD（Levels of Details）上，当模型与摄像机的距离大于一定值之后，使用面数较少的模型来代替高模，这样可以减少GPU带宽消耗和渲染压力。
 
