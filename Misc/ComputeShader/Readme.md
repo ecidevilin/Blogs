@@ -249,6 +249,7 @@ Hiz Occ
 引用
 ===
 - https://github.com/keijiro/KvantStream
+- https://www.shpakivnia.com/cloth-tool
 - http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx
 - https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_chapter23.html
 - https://www.nvidia.cn/coolstuff/demos#!/geforce-gtx-600/nalu
