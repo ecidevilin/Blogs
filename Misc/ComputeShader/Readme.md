@@ -143,7 +143,7 @@ threadGroupsXYZ代表线程组的数量
 语法
 ===
 ## numthreads
-# ![](Pics/threadGroups.png)
+# ![](Pics/ThreadGroups.png)
 <!--
 左边代表了一个Dispatch调用的总线程数量
 右边代表了一个线程
