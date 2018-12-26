@@ -359,7 +359,7 @@ https://github.com/keijiro/KvantStream
 - https://docs.microsoft.com/en-us/windows/desktop/direct3d11/direct3d-11-advanced-stages-compute-shader
 - https://static.docs.arm.com/100614/0302/arm_mali_gpu_opencl_developer_guide_100614_0302_00_en.pdf
 - https://developer.apple.com/metal/
-- Real-Time Rendering 3rd Edition
+- Real-Time Rendering 3rd Edition. Chapter 18
 ---
 引用
 ===
