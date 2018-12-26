@@ -324,7 +324,7 @@ https://github.com/keijiro/KvantStream
 用途
 ===
 ## 局部光源剔除
-# ![](Pics/battleField3.jpg)
+# ![](Pics/battlefield3.jpg)
 
 ---
 用途
