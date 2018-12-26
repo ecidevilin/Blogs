@@ -40,6 +40,9 @@ Compute Shader 入门精要
 # ![](Pics/CPU_Design.png)
 
 <!--CPU擅长逻辑控制和串行的运算。
+有很强大算术逻辑单元，减少操作延迟
+巨大的cache，内存访问延迟大，空间换时间
+复杂的控制，使用分支预测来减少分支延迟，使用数据转发减少数据延迟
 -->
 
 ---
@@ -49,6 +52,10 @@ Compute Shader 入门精要
 # ![](Pics/GPU_Design.png)
 
 <!--GPU适用于计算密集型和易于并发的程序。
+小的cache，用来促进吞吐量
+简单的控制，没有分支预测和数据转发
+高效节能的ALU，很多延迟很长的ALU，但是为了高吞吐量被重度管线化
+（需要大量的线程来容忍延迟）开启大量的线程，可以降低延迟
 -->
 
 ---
@@ -73,6 +80,7 @@ Metal和Vulkan都支持CS
 ## Compute管线与图像管线的对比
 # ![](Pics/CompareToGraphics.png)
 <!--
+其实还少一个Output Merger Stage
 GPU Rendering Pipeline https://github.com/ecidevilin/Blogs/blob/master/IntroTo3DGPWithDX/Tessellation/pic/pipeline.jpg
 -->
 
@@ -96,7 +104,7 @@ GPU Rendering Pipeline https://github.com/ecidevilin/Blogs/blob/master/IntroTo3D
 ---
 语法
 ===
-## ShaderLab
+## kernel
 ``` ShaderLab
 // test.compute
 #pragma kernel FillWithRed
@@ -151,7 +159,6 @@ numthreads 4x4x2
 ---
 语法
 ===
-## id
 # ![](Pics/threadgroupids.png)
 <!--
 Dispatch 5x3x2
@@ -166,6 +173,7 @@ numthreads 10x8x3
 | GPU Side | CPU Side |
 |-----|-----|
 |\*StructuredBuffer|ComputeBuffer|
+|Texture\*D|Texture|
 |RWTexture\*D|RenderTexture|
 <!--
 StructuredBuffer还包括
@@ -240,7 +248,7 @@ https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02
 - **未初始化**的Buffer或Texture，在某些平台上会全部是0，但是另外一些可能是任意值，甚至是NaN。
 - Metal不支持**对纹理的原子操作**，不支持对buffer调用**GetDimensions**。
 - OpenGL ES 3.1在一个ComputeShader里**至少支持4个buffer**（所以，我们需要将相关联的数据定义为结构体）。
-- 在渲染管线中，部分平台**只支持在片元着色器内访问StructuredBuffer**。
+- 在渲染管线中，部分号称支持es3.1+的Android手机**只支持在片元着色器内访问StructuredBuffer**。
 <!--
 -->
 
@@ -251,13 +259,14 @@ https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02
 - 尽量减少Group之间的交互
 - GPU一次调用64（AMD）或32（NVIDIA）或16（Intel）个线程，所以，尽量使numthreads的乘积是这个值的整数倍。（但是Mali不需要这种优化，Metal可以通过api获取这个值）
 - 避免回读
-- 尽量保证内存连续性
-- 避免分支
-- 使用[unroll]来打开循环
-- 向量和标量分开计算
+- *尽量保证内存连续性*
+- *避免分支*
+- *使用[unroll]来打开循环*
 <!--
 Group之间的交互很慢，并且容易崩溃或者GPU挂掉
 wavefront/warp/EU-thread实际上是一种SIMD技术
+回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。
+剩下的一些Tips在渲染管线中也同样适用
 -->
 
 ---
@@ -290,6 +299,9 @@ https://github.com/keijiro/KvantStream
 ===
 ## 纹理压缩
 # ![](Pics/ImageCompression.png)
+<!--
+4x4 6x6 8x8
+-->
 
 ---
 用途
