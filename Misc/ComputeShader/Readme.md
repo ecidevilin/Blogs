@@ -182,6 +182,9 @@ RWStructuredBuffer with counter
 (RW)ByteAddressBuffer
 AppendStructuredBuffer
 ConsumeStructuredBuffer
+
+StructuredBuffer除了可以包含各种内置的类型之外
+还可以包含自定义的struct
 -->
 
 ---
@@ -232,6 +235,7 @@ InterlockedMin
 InterlockedOr
 InterlockedXor
 ```
+*但是只能用于int/uint*
 <!--
 例如可以用于计算颜色直方图
 https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02910fc700/GentiiVRJam/Assets/Standard%20Assets/Effects/CinematicEffects(BETA)/TonemappingColorGrading/Resources/HistogramCompute.compute
