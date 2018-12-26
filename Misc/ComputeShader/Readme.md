@@ -272,45 +272,41 @@ wavefront/warp/EU-thread实际上是一种SIMD技术
 ---
 用途
 ===
-## GPU粒子系统
-# ![](Pics/GPUPS.gif)
-https://github.com/keijiro/KvantStream
+## GPU Particle System
+# ![](Pics/GPUParticles.png)
+
 <!--
+图为用CS实现的GPU粒子系统
 -->
 
 ---
 用途
 ===
-## GPU模拟
+## GPU Simulation
 # ![](Pics/GPUCloth.gif)
 <!--
+图为布料模拟，使用了CS进行粒子计算、碰撞检测（反馈）和约束计算
 -->
 
 ---
 用途
 ===
-## 图像处理
+## Image Processing
 # ![](Pics/cs_filters.jpg)
 <!--
+图为去色的图像处理
+rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 -->
 
 ---
 用途
 ===
-## 纹理压缩
+## Image Compression
 # ![](Pics/ImageCompression.png)
 <!--
 4x4 6x6 8x8
 -->
 
----
-用途
-===
-## Look-up Texture
-# ![](Pics/naluLut0.png)
-# ![](Pics/naluLut1.png)
-<!--
--->
 
 ---
 用途
@@ -318,21 +314,28 @@ https://github.com/keijiro/KvantStream
 ## Tessellation
 # ![](Pics/tessellation.jpg)
 <!--
+默认管线中的Tessellation比较受限，可以使用Displacement mapping来增加它的灵活性。
+不过配合CS一起使用，你会开启新世界的大门。
 -->
 
 ---
 用途
 ===
-## 局部光源剔除
+## Local lights culling
 # ![](Pics/battlefield3.jpg)
+
+<!--
+战地3中，使用了Deffered shading pipeline，通过cs对点光源、探照灯等光源进行剔除
+-->
 
 ---
 用途
 ===
-## 遮挡剔除
+## Occlusion culling
 # ![](Pics/HizOcc.jpg)
 
 <!--Hiz Occ
+图片来源，知乎大V MaxwellGeng实现的GPU Occlusiong Culling
 -->
 
 ---
@@ -341,6 +344,7 @@ https://github.com/keijiro/KvantStream
 ## GPU Driven Rendering Pipeline
 # ![](Pics/GPUDRP.jpg)
 <!--
+图为刺客信条大革命，在这部游戏中使用了GPUDRP技术，并在Siggraph 2015: Advances in Real-Time Rendering in Games course中发表
 -->
 
 ---
