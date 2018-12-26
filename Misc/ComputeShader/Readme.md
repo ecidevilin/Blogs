@@ -250,7 +250,8 @@ Hiz Occ
 ===
 - https://github.com/keijiro/KvantStream
 - http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx
-- Hair Animation and Rendering in the Nalu Demo, GPU Gems 2
+- https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_chapter23.html
+- https://www.nvidia.cn/coolstuff/demos#!/geforce-gtx-600/nalu
 - https://www.nvidia.com/object/tessellation.html
 - https://zhuanlan.zhihu.com/p/47615677
 - http://advances.realtimerendering.com/s2015/aaltonenhaar_siggraph2015_combined_final_footer_220dpi.pdf
