@@ -359,30 +359,30 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 ---
 引用
 ===
-- http://www.cnblogs.com/biglucky/p/4223565.html
-- http://on-demand.gputechconf.com/gtc/2010/presentations/S12312-DirectCompute-Pre-Conference-Tutorial.pdf
-- https://www.youtube.com/watch?v=0DLOJPSxJEg
-- https://arm-software.github.io/vulkan-sdk/basic_compute.html
-- https://www.khronos.org/opengl/wiki/Compute_Shader
-- https://docs.microsoft.com/en-us/windows/desktop/direct3d11/direct3d-11-advanced-stages-compute-shader
-- https://static.docs.arm.com/100614/0302/arm_mali_gpu_opencl_developer_guide_100614_0302_00_en.pdf
-- https://developer.apple.com/metal/
-- Real-Time Rendering 3rd Edition. Chapter 18
+1. http://www.cnblogs.com/biglucky/p/4223565.html
+2. http://on-demand.gputechconf.com/gtc/2010/presentations/S12312-DirectCompute-Pre-Conference-Tutorial.pdf
+3. https://www.youtube.com/watch?v=0DLOJPSxJEg
+4. https://arm-software.github.io/vulkan-sdk/basic_compute.html
+5. https://www.khronos.org/opengl/wiki/Compute_Shader
+6. https://docs.microsoft.com/en-us/windows/desktop/direct3d11/direct3d-11-advanced-stages-compute-shader
+7. https://static.docs.arm.com/100614/0302/arm_mali_gpu_opencl_developer_guide_100614_0302_00_en.pdf
+8. https://developer.apple.com/metal/
+9. Real-Time Rendering 3rd Edition. Chapter 18
 ---
 引用
 ===
-- https://github.com/keijiro/KvantStream
-- https://www.shpakivnia.com/cloth-tool
-- http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx
-- https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_chapter23.html
-- https://www.nvidia.cn/coolstuff/demos#!/geforce-gtx-600/nalu
-- https://www.nvidia.com/object/tessellation.html
-- https://www.slideshare.net/DICEStudio/directx-11-rendering-in-battlefield-3
-- https://zhuanlan.zhihu.com/p/47615677
-- http://advances.realtimerendering.com/s2015/aaltonenhaar_siggraph2015_combined_final_footer_220dpi.pdf
+10. https://github.com/keijiro/KvantStream
+11. https://www.shpakivnia.com/cloth-tool
+12. http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx
+13. https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_chapter23.html
+14. https://www.nvidia.cn/coolstuff/demos#!/geforce-gtx-600/nalu
+15. https://www.nvidia.com/object/tessellation.html
+16. https://www.slideshare.net/DICEStudio/directx-11-rendering-in-battlefield-3
+17. https://zhuanlan.zhihu.com/p/47615677
+18. http://advances.realtimerendering.com/s2015/aaltonenhaar_siggraph2015_combined_final_footer_220dpi.pdf
 
 ---
 引用
 ===
-- https://docs.unity3d.com/Manual/class-ComputeShader.html
-- https://forum.unity.com/threads/compute-shaders.148874/
+19. https://docs.unity3d.com/Manual/class-ComputeShader.html
+20. https://forum.unity.com/threads/compute-shaders.148874/
