@@ -191,9 +191,9 @@ StructuredBuffer除了可以包含各种内置的类型之外
 
 使用groupshared可以将一个变量标记为组内共享。（又叫TGSM）
 <!--
+[2][6]
 例如，我们可以在forward+/Deferred管线里使用compute shader对点光源进行剔除。
- https://github.com/jpvanoosten/VolumeTiledForwardShading
-[2][6][16]
+[16][26]
 -->
 
 ---
@@ -231,9 +231,9 @@ InterlockedXor
 ```
 *但是只能用于int/uint*
 <!--
-例如可以用于计算颜色直方图
-https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02910fc700/GentiiVRJam/Assets/Standard%20Assets/Effects/CinematicEffects(BETA)/TonemappingColorGrading/Resources/HistogramCompute.compute
 [6]
+例如可以在Tonemapping中用于计算颜色直方图
+[27]
 -->
 
 
@@ -377,3 +377,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 23. https://www.gdcvault.com/play/1020352/Low-Level-Shader-Optimization-for
 24. 数字图像处理（冈萨雷斯）
 25. https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units
+---
+## 引用
+26.  https://github.com/jpvanoosten/VolumeTiledForwardShading
+27.  https://docs.unity3d.com/Manual/AssetPackages.html
