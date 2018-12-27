@@ -295,7 +295,7 @@ InterlockedXor
 但是Mali不需要这种优化[8]
 Metal可以通过api获取这个值[7]
 (3)回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。[20]
-(4)如果是warp的整数倍，就还好[2]
+(4)如果是warp的整数倍，就还好[2][29]
 剩下的一些Tips在渲染管线中也同样适用[22][23]
 -->
 
@@ -417,3 +417,4 @@ Optimizations and Best Practices](http://on-demand.gputechconf.com/gtc/2010/pres
 26. [Volume Tiled Forward Shading (Github)](https://github.com/jpvanoosten/VolumeTiledForwardShading)
 27.  [Unity3D AssetPackages](https://docs.unity3d.com/Manual/AssetPackages.html)
 28.  [Mythbusters Demo GPU versus CPU ( NVIDIA )](http://v.youku.com/v_show/id_XNjY3MTY4NjAw.html)
+29.  全局光照技术：从离线到实时渲染
