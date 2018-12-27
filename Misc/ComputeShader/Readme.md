@@ -302,7 +302,7 @@ wavefront/warp/EU-thread实际上是一种SIMD技术
 用途
 ===
 ## GPU Simulation
-# ![](Pics/GPUCloth.gif)
+# ![](Pics/GPUCloth.png)
 <!--
 图为布料模拟，使用了CS进行粒子计算、碰撞检测（反馈）和约束计算
 [11]
