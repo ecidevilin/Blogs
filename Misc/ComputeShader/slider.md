@@ -229,7 +229,7 @@ StructuredBuffer除了可以包含各种内置的类型之外
 
 ---
 ### Barrier
-当我们在不同线程访问同一个资源的时候，我们需要使用barrier来进行阻塞。
+当我们在不同线程访问同一个资源的时候，我们需要使用barrier来进行阻塞和同步。
 ```
 GroupMemoryBarrier 
 GroupMemoryBarrierWithGroupSync  
@@ -284,7 +284,7 @@ InterlockedXor
 ---
 ### 性能
 1. 尽量减少Group之间的交互
-2. GPU一次调用64（AMD）或32（NVIDIA）个线程，所以，尽量使numthreads的乘积是这个值的整数倍。
+2. GPU一次Dispatch会调用64（AMD）或32（NVIDIA）个线程，所以，numthreads的乘积最好是这个值的整数倍。
 3. 避免回读
 4. 避免分支，重点避免在thread group中间的分支
 5. *尽量保证内存连续性*
@@ -346,8 +346,8 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
 ![](Pics/tessellation.jpg)
 <!--
 [15]
-默认管线中的Tessellation比较受限，可以使用Displacement mapping来增加它的灵活性。
-不过配合CS一起使用，我们可以配合一些逻辑更自由的生成细分后的顶点位置。
+默认管线中的Tessellation比较受限，可以使用Displacement mapping来提升它的效果。
+不过配合CS一起使用，我们可以配合一些逻辑更自由更动态的生成细分顶点。
 [14][3]
 -->
 
