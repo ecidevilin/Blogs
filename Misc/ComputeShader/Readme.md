@@ -203,11 +203,11 @@ StructuredBuffer除了可以包含各种内置的类型之外
 ===
 ## groupshared
 
-使用groupshared可以将一个变量标记为组内共享。
+使用groupshared可以将一个变量标记为组内共享。（又叫TGSM）
 <!--
 例如，我们可以在forward+/Deferred管线里使用compute shader对点光源进行剔除。
  https://github.com/jpvanoosten/VolumeTiledForwardShading
-[6][16]
+[2][6][16]
 -->
 
 ---
@@ -277,9 +277,9 @@ https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02
 - 尽量减少Group之间的交互
 - GPU一次调用64（AMD）或32（NVIDIA）个线程，所以，尽量使numthreads的乘积是这个值的整数倍。（但是Mali不需要这种优化，Metal可以通过api获取这个值）
 - 避免回读
+- 避免分支，重点避免在thread group中间的分支
 - *尽量保证内存连续性*
-- *避免分支*
-- *使用[unroll]来打开循环*
+- *使用[unroll]来打开循环，有些时候需要手动unroll*
 <!--
 Group之间的交互很慢，并且容易崩溃或者GPU挂掉
 wavefront/warp/EU-thread实际上是一种SIMD技术
