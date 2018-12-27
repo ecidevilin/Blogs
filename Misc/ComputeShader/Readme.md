@@ -259,14 +259,14 @@ https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02
 语法
 ===
 ## 平台差异
-- 如果**数组越界**，DX上会返回0，其它平台会出错。
-- 如果变量名与关键字/内置库函数**重名**，DX没有影响，其他平台会出错。
+- **数组越界**，DX上会返回0，其它平台会出错。
+- 变量名与关键字/内置库函数**重名**，DX无影响，其他平台会出错。
 - 如果StructuredBuffer内结构的显存布局要与**内存布局不一致**，DX可能会转换，其他平台会出错。
 - **未初始化**的Buffer或Texture，在某些平台上会全部是0，但是另外一些可能是任意值，甚至是NaN。
 - Metal不支持**对纹理的原子操作**，不支持对buffer调用**GetDimensions**。
 - OpenGL ES 3.1在一个ComputeShader里**至少支持4个buffer**（所以，我们需要将相关联的数据定义为结构体）。
-- 在渲染管线中，部分号称支持es3.1+的Android手机**只支持在片元着色器内访问StructuredBuffer**。
 <!--
+- 在渲染管线中，部分号称支持es3.1+的Android手机**只支持在片元着色器内访问StructuredBuffer**。
 [19]
 -->
 
@@ -292,8 +292,7 @@ wavefront/warp/EU-thread实际上是一种SIMD技术
 用途
 ===
 ## GPU Particle System
-# ![](Pics/GPUParticles.png)
-
+<img src=Pics/GPUParticles.png height=480>
 <!--
 图为用CS实现的GPU粒子系统
 [10]
