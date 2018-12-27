@@ -43,6 +43,7 @@ Compute Shader 入门精要
 有很强大算术逻辑单元，减少操作延迟
 巨大的cache，内存访问延迟大，空间换时间
 复杂的控制，使用分支预测来减少分支延迟，使用数据转发减少数据延迟
+[1]
 -->
 
 ---
@@ -56,6 +57,7 @@ Compute Shader 入门精要
 简单的控制，没有分支预测和数据转发
 高效节能的ALU，很多延迟很长的ALU，但是为了高吞吐量被重度管线化
 （需要大量的线程来容忍延迟）开启大量的线程，可以降低延迟
+[1][2]
 -->
 
 ---
@@ -72,6 +74,7 @@ OpenGL从4.3开始支持CS，但是MacOSX不支持4.3
 ES从3.1开始支持CS
 Metal和Vulkan都支持CS
 另外PS4和Xbox one也支持CS
+[4][5][6][7][19]
 -->
 
 ---
@@ -82,6 +85,7 @@ Metal和Vulkan都支持CS
 <!--
 其实还少一个Output Merger Stage
 GPU Rendering Pipeline https://github.com/ecidevilin/Blogs/blob/master/IntroTo3DGPWithDX/Tessellation/pic/pipeline.jpg
+[3]
 -->
 
 ---
@@ -90,6 +94,7 @@ GPU Rendering Pipeline https://github.com/ecidevilin/Blogs/blob/master/IntroTo3D
 ## 渲染管线（硬件端）
 # ![](Pics/GraphicsPipeline.png)
 <!--
+[3]
 -->
 
 ---
@@ -99,6 +104,7 @@ GPU Rendering Pipeline https://github.com/ecidevilin/Blogs/blob/master/IntroTo3D
 # ![](Pics/ComputePipeline.png)
 
 <!--Compute Shader可以在不通过渲染管线的情况下，利用GPU完成一些与图像渲染不直接相关的工作。这样就可以降低硬件的overhead。
+[3]
 -->
 
 ---
@@ -120,6 +126,7 @@ void FillWithRed (uint3 dtid : SV_DispatchThreadID)
 ```
 <!--
 一个简单的Compute Shader示例
+[19]
 -->
 
 ---
@@ -135,6 +142,7 @@ public void Dispatch(int kernelIndex,
 <!--kernelIndex来源于Metal API的思路，可以在一个资源文件里定义不同的kernel方法，公用一些代码，同时也可以做到相对独立
 threadGroupsXYZ代表线程组的数量
 关于线程组，我们可以看下面这张图
+[21]
 -->
 
 
@@ -154,6 +162,7 @@ numthreads 4x4x2
 
 这样做的好处一个是可以利用gpu的warp/wavefront/EU-thread
 另外，可以用来处理多种多样的图像压缩和解压缩；local size可以作为图像数据的一个block的大小（例如8x8）,group数量可以是图像的尺寸除以块的尺寸。每个块被当作一个单独的work group来处理。
+[2]
 -->
 
 ---
@@ -164,6 +173,7 @@ numthreads 4x4x2
 Dispatch 5x3x2
 numthreads 10x8x3
 这些一般是用来作为索引来获取Buffer或Texture里的数据
+[6]
 -->
 
 ---
@@ -185,6 +195,7 @@ ConsumeStructuredBuffer
 
 StructuredBuffer除了可以包含各种内置的类型之外
 还可以包含自定义的struct
+[5][6]
 -->
 
 ---
@@ -196,7 +207,7 @@ StructuredBuffer除了可以包含各种内置的类型之外
 <!--
 例如，我们可以在forward+/Deferred管线里使用compute shader对点光源进行剔除。
  https://github.com/jpvanoosten/VolumeTiledForwardShading
-
+[6][16]
 -->
 
 ---
@@ -217,6 +228,7 @@ GroupMemoryBarrier用于等待对groupshared变量的访问
 DeviceMemoryBarrier用于等待对texture或buffer的访问
 AllMemoryBarrier是以上两者的和
 WithGroupSync版本是需要同步本组内所有线程到达当前指令
+[6]
 -->
 
 ---
@@ -239,6 +251,7 @@ InterlockedXor
 <!--
 例如可以用于计算颜色直方图
 https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02910fc700/GentiiVRJam/Assets/Standard%20Assets/Effects/CinematicEffects(BETA)/TonemappingColorGrading/Resources/HistogramCompute.compute
+[6]
 -->
 
 
@@ -254,6 +267,7 @@ https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02
 - OpenGL ES 3.1在一个ComputeShader里**至少支持4个buffer**（所以，我们需要将相关联的数据定义为结构体）。
 - 在渲染管线中，部分号称支持es3.1+的Android手机**只支持在片元着色器内访问StructuredBuffer**。
 <!--
+[19]
 -->
 
 ---
@@ -261,7 +275,7 @@ https://github.com/StayGrizzly/GentiiVRJam/blob/6e88c6ef6e2ea910884c50002f7fca02
 ===
 ## 性能
 - 尽量减少Group之间的交互
-- GPU一次调用64（AMD）或32（NVIDIA）或16（Intel）个线程，所以，尽量使numthreads的乘积是这个值的整数倍。（但是Mali不需要这种优化，Metal可以通过api获取这个值）
+- GPU一次调用64（AMD）或32（NVIDIA）个线程，所以，尽量使numthreads的乘积是这个值的整数倍。（但是Mali不需要这种优化，Metal可以通过api获取这个值）
 - 避免回读
 - *尽量保证内存连续性*
 - *避免分支*
@@ -271,6 +285,7 @@ Group之间的交互很慢，并且容易崩溃或者GPU挂掉
 wavefront/warp/EU-thread实际上是一种SIMD技术
 回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。
 剩下的一些Tips在渲染管线中也同样适用
+[2][3][7][8][20][22][23]
 -->
 
 ---
@@ -281,6 +296,7 @@ wavefront/warp/EU-thread实际上是一种SIMD技术
 
 <!--
 图为用CS实现的GPU粒子系统
+[10]
 -->
 
 ---
@@ -290,6 +306,7 @@ wavefront/warp/EU-thread实际上是一种SIMD技术
 # ![](Pics/GPUCloth.gif)
 <!--
 图为布料模拟，使用了CS进行粒子计算、碰撞检测（反馈）和约束计算
+[11]
 -->
 
 ---
@@ -300,6 +317,7 @@ wavefront/warp/EU-thread实际上是一种SIMD技术
 <!--
 图为去色的图像处理
 rgb与(0.299,0.587,0.114)进行dot，获得灰度值
+[12][24]
 -->
 
 ---
@@ -309,6 +327,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 # ![](Pics/ImageCompression.png)
 <!--
 4x4 6x6 8x8
+[13]
 -->
 
 
@@ -320,6 +339,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 <!--
 默认管线中的Tessellation比较受限，可以使用Displacement mapping来增加它的灵活性。
 不过配合CS一起使用，你会开启新世界的大门。
+[14][15]
 -->
 
 ---
@@ -330,6 +350,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 
 <!--
 战地3中，使用了Deffered shading pipeline，通过cs对点光源、探照灯等光源进行剔除
+[16]
 -->
 
 ---
@@ -340,6 +361,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 
 <!--Hiz Occ
 图片来源，知乎大V MaxwellGeng实现的GPU Occlusiong Culling
+[17]
 -->
 
 ---
@@ -349,6 +371,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 # ![](Pics/GPUDRP.jpg)
 <!--
 图为刺客信条大革命，在这部游戏中使用了GPUDRP技术，并在Siggraph 2015: Advances in Real-Time Rendering in Games course中发表
+[18]
 -->
 
 ---
@@ -359,23 +382,23 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 ---
 引用
 ===
-1. http://www.cnblogs.com/biglucky/p/4223565.html
+1. https://slideplayer.com/slide/9636742/
 2. http://on-demand.gputechconf.com/gtc/2010/presentations/S12312-DirectCompute-Pre-Conference-Tutorial.pdf
 3. https://www.youtube.com/watch?v=0DLOJPSxJEg
 4. https://arm-software.github.io/vulkan-sdk/basic_compute.html
 5. https://www.khronos.org/opengl/wiki/Compute_Shader
 6. https://docs.microsoft.com/en-us/windows/desktop/direct3d11/direct3d-11-advanced-stages-compute-shader
-7. https://static.docs.arm.com/100614/0302/arm_mali_gpu_opencl_developer_guide_100614_0302_00_en.pdf
-8. https://developer.apple.com/metal/
+7. https://developer.apple.com/metal/
+8. https://static.docs.arm.com/100614/0302/arm_mali_gpu_opencl_developer_guide_100614_0302_00_en.pdf
 9. Real-Time Rendering 3rd Edition. Chapter 18
 ---
 引用
 ===
-10. https://github.com/keijiro/KvantStream
+10. https://github.com/Robert-K/gpu-particles
 11. https://www.shpakivnia.com/cloth-tool
 12. http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx
-13. https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_chapter23.html
-14. https://www.nvidia.cn/coolstuff/demos#!/geforce-gtx-600/nalu
+13. https://en.wikipedia.org/wiki/Adaptive_Scalable_Texture_Compression
+14. Introduction to 3D Game Programming with DirectX 11
 15. https://www.nvidia.com/object/tessellation.html
 16. https://www.slideshare.net/DICEStudio/directx-11-rendering-in-battlefield-3
 17. https://zhuanlan.zhihu.com/p/47615677
@@ -386,3 +409,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 ===
 19. https://docs.unity3d.com/Manual/class-ComputeShader.html
 20. https://forum.unity.com/threads/compute-shaders.148874/
+21. https://docs.unity3d.com/ScriptReference/ComputeShader.Dispatch.html
+22. http://www.humus.name/Articles/Persson_LowlevelShaderOptimization.pptx
+23. https://www.gdcvault.com/play/1020352/Low-Level-Shader-Optimization-for
+24. 数字图像处理（冈萨雷斯）
