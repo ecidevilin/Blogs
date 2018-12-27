@@ -8,9 +8,13 @@ template: invert-->
 
 # ![](Pics/icon.png)
 
-##### Optimize your game using compute shader
+##### Optimize your game using compute
 
 ###### **凯奥斯**
+<!--
+这个题目来源于AMD在4C上的一个演讲
+Compute Shaders: Optimize your engine using compute
+-->
 
 ---
 
@@ -27,22 +31,17 @@ template: invert-->
 
 ## 概念
 ###### 介绍一下背景知识
-
----
-
-### GPGPU
-
-![](Pics/GPGPU.jpg)
-<!-- Compute Shader是一种GPGPU技术，也就是利用GPU进行通用计算的技术
-（General Purpose Computing on GPU）
-[25]
+![bg](Pics/GPU.jpg)
+<!--
+众所周知，CPU和GPU是两种不同的架构，那么他们之间的区别是什么？[1]
 -->
 
 ---
 ### CPU是基于低延迟的设计
 ![](Pics/CPU_Design.png)
 
-<!--CPU擅长逻辑控制和串行的运算。
+<!--
+CPU擅长逻辑控制和串行的运算。
 有很强大算术逻辑单元，减少操作延迟
 巨大的cache，内存访问延迟大，空间换时间
 复杂的控制，使用分支预测来减少分支延迟，使用数据转发减少数据延迟
@@ -62,13 +61,29 @@ template: invert-->
 -->
 
 ---
+
+### GPGPU
+
+![](Pics/GPGPU.jpg)
+<!--
+所以，我们可以将二者结合起来，使用CPU执行串行部分，而使用GPU执行并行部分。[1]
+这种技术就叫做GPGPU，也就是利用GPU进行通用计算的技术
+（General Purpose Computing on GPU）
+但是我们知道，GPU是用来执行图形渲染的。
+为了执行通用计算，NV推出了CUDA，Khronos推出了OpenCL，Microsoft推出了DirectCompute，也就是后来的Compute Shader，后面各种图形API也相继推出了CS。
+
+[25]
+
+-->
+
+---
 ### 支持Compute Shader的图形API
 ![](Pics/DirectX10.jpg) ![](Pics/DirectX11.jpg) ![](Pics/DirectX12.jpg)
 ![4.3](Pics/OpenGL.png) ![3.1](Pics/OpenGLES.png)
 ![](Pics/Metal.png) ![](Pics/Vulkan.png)
 <!--DX虽然从10开始支持Compute Shader/Direct Compute，但是比较受限。[6]
-11支持了更强大的Compute Shader[6]
-所以我们一般在Unity中使用CS，还是要求shader model 5/shader target4.5[19]
+11支持了更强大的Compute Shader[6]，当然肯定还有DX12。
+所以我们一般在Unity中使用CS，还是要求shader target4.5（也就是shader model 5）[19]
 OpenGL从4.3开始支持CS，但是MacOSX不支持4.3[5][19]
 ES从3.1开始支持CS[5][19]
 Metal和Vulkan都支持CS[4][7][19]
@@ -76,18 +91,21 @@ Metal和Vulkan都支持CS[4][7][19]
 -->
 
 ---
-### Compute管线与图像管线的对比
+### Compute管线与图形管线的对比
 ![](Pics/CompareToGraphics.png)
 <!--
-其实还少一个Output Merger Stage
-GPU Rendering Pipeline https://github.com/ecidevilin/Blogs/blob/master/IntroTo3DGPWithDX/Tessellation/pic/pipeline.jpg
+我们可以看到，计算管线变得很简单
 [3]
+（其实还少一个Output Merger Stage）
+关于GPU Rendering Pipeline，可以参考这张图 https://github.com/ecidevilin/Blogs/blob/master/IntroTo3DGPWithDX/Tessellation/pic/pipeline.jpg
+[14]
 -->
 
 ---
-### 渲染管线（硬件端）
+### 图形管线（硬件端）
 ![](Pics/GraphicsPipeline.png)
 <!--
+在硬件端的区别
 [3]
 -->
 
@@ -102,6 +120,12 @@ GPU Rendering Pipeline https://github.com/ecidevilin/Blogs/blob/master/IntroTo3D
 ---
 ## 语法
 ##### 如何在Unity里使用Compute Shader
+![bg](Pics/Unity.jpg)
+<!--
+各种API的shading language语法和API各不相同
+Unity的ShaderLab采用了跟DX接近的API
+方便我们编写shader
+-->
 
 ---
 ### kernel
@@ -131,7 +155,10 @@ public void Dispatch(int kernelIndex,
 	int threadGroupsY, 
     int threadGroupsZ);
 ```
-<!--kernelIndex来源于Metal的思路[7]，可以在一个资源文件里定义不同的kernel方法，公用一些代码，同时也可以做到相对独立
+<!--
+在CPU端，我们可以通过这个接口，将CS dispatch出去。
+Dispatch就相当于Drawcall没有draw。
+kernelIndex来源于Metal的思路[7]，可以在一个资源文件里定义不同的kernel方法，公用一些代码，同时也可以做到相对独立。
 threadGroupsXYZ代表线程组的数量
 [21]
 -->
@@ -143,10 +170,11 @@ threadGroupsXYZ代表线程组的数量
 ![](Pics/ThreadGroups.png)
 <!--
 [2]
+可以将numthreads这个attribute声明在kernel函数的前面，用来表示一个thread group中有多少个thread。
+如图所示
 左边代表了一个Dispatch调用的总线程数量
 右边代表了一个线程
 而中间代表了一个线程组
-如图所示
 Dispatch 3x2x3
 numthreads 4x4x2
 这样做的好处一个是可以利用gpu的warp/wavefront/EU-thread[2][3]
@@ -160,6 +188,7 @@ numthreads 4x4x2
 [6]
 Dispatch 5x3x2
 numthreads 10x8x3
+如图所示，我们可以算出GroupThreadID，GroupID，DispatchThreadID和GroupIndex
 各种id一般是用来作为索引来获取Buffer或Texture里的数据[5]
 -->
 
@@ -171,6 +200,9 @@ numthreads 10x8x3
 |Texture\*D|Texture|
 |RWTexture\*D|RenderTexture|
 <!--
+CS除了可以使用其他shader使用的各种类型之外
+为了更灵活的使用CS，还推出了StructuredBuffer，简称SBuffer。
+当然，SBuffer在fs里也可以使用，在其他shader里也可能可以使用。
 StructuredBuffer还包括
 RWStructuredBuffer
 RWStructuredBuffer with counter
@@ -188,6 +220,8 @@ StructuredBuffer除了可以包含各种内置的类型之外
 使用groupshared可以将一个变量标记为组内共享。（又叫TGSM）
 <!--
 [2][6]
+这样，thread group内的thread之间就可以进行通讯。
+[5]
 例如，我们可以在forward+/Deferred管线里使用compute shader对点光源进行剔除。
 [16][26]
 -->
@@ -235,31 +269,32 @@ InterlockedXor
 
 ---
 ### 平台差异
-- **数组越界**，DX上会返回0，其它平台会出错。
-- 变量名与关键字/内置库函数**重名**，DX无影响，其他平台会出错。
-- 如果SBuffer内结构的显存布局要与**内存布局不一致**，DX可能会转换，其他平台会出错。
-- **未初始化**的SBuffer或Texture，在某些平台上会全部是0，但是另外一些可能是任意值，甚至是NaN。
-- Metal不支持**对纹理的原子操作**，不支持对SBuffer调用**GetDimensions**。
-- ES 3.1在一个CS里**至少支持4个SBuffer**（所以，我们需要将相关联的数据定义为struct）。
+1. **数组越界**，DX上会返回0，其它平台会出错。
+2. 变量名与关键字/内置库函数**重名**，DX无影响，其他平台会出错。
+3. 如果SBuffer内结构的显存布局要与**内存布局不一致**，DX可能会转换，其他平台会出错。
+4. **未初始化**的SBuffer或Texture，在某些平台上会全部是0，但是另外一些可能是任意值，甚至是NaN。
+5. Metal不支持**对纹理的原子操作**，不支持对SBuffer调用**GetDimensions**。
+6. ES 3.1在一个CS里**至少支持4个SBuffer**（所以，我们需要将相关联的数据定义为struct）。
 <!--
-- 在渲染管线中，部分号称支持es3.1+的Android手机**只支持在片元着色器内访问StructuredBuffer**。
+7. 在渲染管线中，部分号称支持es3.1+的Android手机**只支持在片元着色器内访问StructuredBuffer**。
 [19]
 -->
 
 ---
 ### 性能
-- 尽量减少Group之间的交互
-- GPU一次调用64（AMD）或32（NVIDIA）个线程，所以，尽量使numthreads的乘积是这个值的整数倍。
-- 避免回读
-- 避免分支，重点避免在thread group中间的分支
-- *尽量保证内存连续性*
-- *使用[unroll]来打开循环，有些时候需要手动unroll*
+1. 尽量减少Group之间的交互
+2. GPU一次调用64（AMD）或32（NVIDIA）个线程，所以，尽量使numthreads的乘积是这个值的整数倍。
+3. 避免回读
+4. 避免分支，重点避免在thread group中间的分支
+5. *尽量保证内存连续性*
+6. *使用[unroll]来打开循环，有些时候需要手动unroll*
 <!--
-硬件不支持全局同步[2]，不同步的话容易导致错误和崩溃[3]
-wavefront/warp/EU-thread实际上是一种SIMD技术，[2][3]
+(1)硬件不支持全局同步[2]，不同步的话容易导致错误和崩溃[3]
+(2)wavefront/warp/EU-thread实际上是一种SIMD技术，[2][3]
 但是Mali不需要这种优化[8]
 Metal可以通过api获取这个值[7]
-回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。[20]
+(3)回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。[20]
+(4)如果是warp的整数倍，就还好[2]
 剩下的一些Tips在渲染管线中也同样适用[22][23]
 -->
 
