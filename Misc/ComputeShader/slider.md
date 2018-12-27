@@ -344,40 +344,40 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 
 ---
 ## 引用
-1. https://slideplayer.com/slide/9636742/
-2. http://on-demand.gputechconf.com/gtc/2010/presentations/S12312-DirectCompute-Pre-Conference-Tutorial.pdf
-3. https://www.youtube.com/watch?v=0DLOJPSxJEg
-4. https://arm-software.github.io/vulkan-sdk/basic_compute.html
-5. https://www.khronos.org/opengl/wiki/Compute_Shader
+1. [Graphic Processing Processors (GPUs) Parallel Programming](https://slideplayer.com/slide/9636742/)
+2. [DirectCompute
+Optimizations and Best Practices](http://on-demand.gputechconf.com/gtc/2010/presentations/S12312-DirectCompute-Pre-Conference-Tutorial.pdf)
+3. [Compute Shaders: Optimize your engine using compute / Lou Kramer, AMD (video)](https://www.youtube.com/watch?v=0DLOJPSxJEg)
+4. [Introduction to Compute Shaders in Vulkan](https://arm-software.github.io/vulkan-sdk/basic_compute.html)
+5. [Compute Shader(OpenGL)](https://www.khronos.org/opengl/wiki/Compute_Shader)
+6. [Compute Shader Overview(Direct3D 11)](https://docs.microsoft.com/en-us/windows/desktop/direct3d11/direct3d-11-advanced-stages-compute-shader)
 ---
 ## 引用
-6. https://docs.microsoft.com/en-us/windows/desktop/direct3d11/direct3d-11-advanced-stages-compute-shader
-7. https://developer.apple.com/metal/
-8. https://static.docs.arm.com/100614/0302/arm_mali_gpu_opencl_developer_guide_100614_0302_00_en.pdf
+7. [About Threads and Threadgroups(Metal)](https://developer.apple.com/documentation/metal/about_threads_and_threadgroups)
+8. [ARM® Mali™ GPU OpenCL Developer Guide(Version 3.2)](https://static.docs.arm.com/100614/0302/arm_mali_gpu_opencl_developer_guide_100614_0302_00_en.pdf)
 9. Real-Time Rendering 3rd Edition. Chapter 18
-10. https://github.com/Robert-K/gpu-particles
+10. [GPU Particles (Github)](https://github.com/Robert-K/gpu-particles)
+11. [GPU Cloth Tool](https://www.shpakivnia.com/cloth-tool)
+12. [Compute Shader Filters](http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx)
+13. [ASTC](https://en.wikipedia.org/wiki/Adaptive_Scalable_Texture_Compression)
 ---
 ## 引用
-11. https://www.shpakivnia.com/cloth-tool
-12. http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx
-13. https://en.wikipedia.org/wiki/Adaptive_Scalable_Texture_Compression
 14. Introduction to 3D Game Programming with DirectX 11
-15. https://www.nvidia.com/object/tessellation.html
+15. [DirectX 11 Tessellation (NVIDIA)](https://www.nvidia.com/object/tessellation.html)
+16. [DirectX 11 Rendering in Battlefield 3](https://www.slideshare.net/DICEStudio/directx-11-rendering-in-battlefield-3)
+17. [Hi-Z GPU Occlusion Culling](https://zhuanlan.zhihu.com/p/47615677)
+18. [GPU-Driven Rendering Pipelines](http://advances.realtimerendering.com/s2015/aaltonenhaar_siggraph2015_combined_final_footer_220dpi.pdf)
+19. [Compute shaders (Unity3D)](https://docs.unity3d.com/Manual/class-ComputeShader.html)
+20. [Problems with ComputeBuffer Readback](https://forum.unity.com/threads/compute-shaders.148874/)
 ---
 ## 引用
-16. https://www.slideshare.net/DICEStudio/directx-11-rendering-in-battlefield-3
-17. https://zhuanlan.zhihu.com/p/47615677
-18. http://advances.realtimerendering.com/s2015/aaltonenhaar_siggraph2015_combined_final_footer_220dpi.pdf
-19. https://docs.unity3d.com/Manual/class-ComputeShader.html
-20. https://forum.unity.com/threads/compute-shaders.148874/
----
-## 引用
-21. https://docs.unity3d.com/ScriptReference/ComputeShader.Dispatch.html
-22. http://www.humus.name/Articles/Persson_LowlevelShaderOptimization.pptx
-23. https://www.gdcvault.com/play/1020352/Low-Level-Shader-Optimization-for
+21. [ComputeShader.Dispatch (Unity3D)](https://docs.unity3d.com/ScriptReference/ComputeShader.Dispatch.html)
+22. [Low-level Shader Optimization for Next-Gen and DX11 (ppt)](http://www.humus.name/Articles/Persson_LowlevelShaderOptimization.pptx)
+23. [Low-Level Shader Optimization for Next-Gen and DX11 (video)](https://www.gdcvault.com/play/1020352/Low-Level-Shader-Optimization-for)
 24. 数字图像处理（冈萨雷斯）
-25. https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units
+25. [General-purpose computing on graphics processing units (Wikipedia)](https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units)
+26. [Volume Tiled Forward Shading (Github)](https://github.com/jpvanoosten/VolumeTiledForwardShading)
 ---
 ## 引用
-26.  https://github.com/jpvanoosten/VolumeTiledForwardShading
-27.  https://docs.unity3d.com/Manual/AssetPackages.html
+27.  [Unity3D AssetPackages](https://docs.unity3d.com/Manual/AssetPackages.html)
+28.  [Mythbusters Demo GPU versus CPU ( NVIDIA )](http://v.youku.com/v_show/id_XNjY3MTY4NjAw.html)
