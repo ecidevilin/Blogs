@@ -4,7 +4,7 @@ template: invert-->
 <!--footer: 凯奥斯 -->
 <!-- $size: 16:10 -->
 
-# Compute Shader 入门精要
+# Compute Shader
 
 # ![](Pics/icon.png)
 
@@ -14,7 +14,7 @@ template: invert-->
 
 ---
 
-# Compute Shader 入门精要
+# Compute Shader
 
 - 概念
 - 语法
