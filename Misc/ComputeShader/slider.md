@@ -58,6 +58,7 @@ CPU擅长逻辑控制和串行的运算。
 高效节能的ALU，很多延迟很长的ALU，但是为了高吞吐量被重度管线化
 （需要大量的线程来容忍延迟）开启大量的线程，可以降低延迟
 [1][2]
+[28]
 -->
 
 ---
@@ -301,12 +302,14 @@ Metal可以通过api获取这个值[7]
 ---
 ## 应用
 ###### 目前有哪些应用
+![bg](Pics/Fantasy.jpg)
 
 ---
 ### GPU Particle System
 <img src=Pics/GPUParticles.png height=540>
 <!--
 图为用CS实现的GPU粒子系统
+用CS计算粒子的运动轨迹
 [10]
 -->
 
@@ -314,7 +317,8 @@ Metal可以通过api获取这个值[7]
 ### GPU Simulation
 ![](Pics/GPUCloth.png)
 <!--
-图为布料模拟，使用了CS进行粒子计算、碰撞检测（反馈）和约束计算
+图为布料模拟，使用了CS进行粒子的受力运动计算、碰撞检测（反馈）和约束计算
+类似的还有头发模拟和海水模拟
 [11]
 -->
 
@@ -324,6 +328,7 @@ Metal可以通过api获取这个值[7]
 <!--
 图为去色的图像处理[12]
 rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
+类似的还有eye adaptation, color grading等等[3]
 -->
 
 ---
@@ -332,6 +337,7 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
 <!--
 4x4 6x6 8x8
 [13]
+上面提到过，我们可以使用CS来实现基于Block的纹理压缩算法。
 -->
 
 
@@ -341,8 +347,8 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
 <!--
 [15]
 默认管线中的Tessellation比较受限，可以使用Displacement mapping来增加它的灵活性。
-不过配合CS一起使用，你会开启新世界的大门。
-[14]
+不过配合CS一起使用，我们可以配合一些逻辑更自由的生成细分后的顶点位置。
+[14][3]
 -->
 
 ---
@@ -391,7 +397,7 @@ Optimizations and Best Practices](http://on-demand.gputechconf.com/gtc/2010/pres
 10. [GPU Particles (Github)](https://github.com/Robert-K/gpu-particles)
 11. [GPU Cloth Tool](https://www.shpakivnia.com/cloth-tool)
 12. [Compute Shader Filters](http://www.codinglabs.net/tutorial_compute_shaders_filters.aspx)
-13. [ASTC](https://en.wikipedia.org/wiki/Adaptive_Scalable_Texture_Compression)
+13. [Adaptive Scalable Texture Compression](https://en.wikipedia.org/wiki/Adaptive_Scalable_Texture_Compression)
 14. Introduction to 3D Game Programming with DirectX 11
 15. [DirectX 11 Tessellation (NVIDIA)](https://www.nvidia.com/object/tessellation.html)
 ---
