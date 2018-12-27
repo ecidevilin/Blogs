@@ -66,14 +66,13 @@ template: invert-->
 ![](Pics/DirectX10.jpg) ![](Pics/DirectX11.jpg) ![](Pics/DirectX12.jpg)
 ![4.3](Pics/OpenGL.png) ![3.1](Pics/OpenGLES.png)
 ![](Pics/Metal.png) ![](Pics/Vulkan.png)
-<!--DX虽然从10开始支持Compute Shader/Direct Compute，但是比较受限。
-11支持了更强大的Compute Shader
-所以我们一般在Unity中使用CS，还是要求shader model 5/shader target4.5
-OpenGL从4.3开始支持CS，但是MacOSX不支持4.3
-ES从3.1开始支持CS
-Metal和Vulkan都支持CS
-另外PS4和Xbox one也支持CS
-[4][5][6][7][19]
+<!--DX虽然从10开始支持Compute Shader/Direct Compute，但是比较受限。[6]
+11支持了更强大的Compute Shader[6]
+所以我们一般在Unity中使用CS，还是要求shader model 5/shader target4.5[19]
+OpenGL从4.3开始支持CS，但是MacOSX不支持4.3[5][19]
+ES从3.1开始支持CS[5][19]
+Metal和Vulkan都支持CS[4][7][19]
+另外PS4和Xbox one也支持CS[19]
 -->
 
 ---
@@ -132,9 +131,8 @@ public void Dispatch(int kernelIndex,
 	int threadGroupsY, 
     int threadGroupsZ);
 ```
-<!--kernelIndex来源于Metal API的思路，可以在一个资源文件里定义不同的kernel方法，公用一些代码，同时也可以做到相对独立
+<!--kernelIndex来源于Metal的思路[7]，可以在一个资源文件里定义不同的kernel方法，公用一些代码，同时也可以做到相对独立
 threadGroupsXYZ代表线程组的数量
-关于线程组，我们可以看下面这张图
 [21]
 -->
 
@@ -144,26 +142,25 @@ threadGroupsXYZ代表线程组的数量
 ### numthreads
 ![](Pics/ThreadGroups.png)
 <!--
+[2]
 左边代表了一个Dispatch调用的总线程数量
 右边代表了一个线程
 而中间代表了一个线程组
 如图所示
 Dispatch 3x2x3
 numthreads 4x4x2
-
-这样做的好处一个是可以利用gpu的warp/wavefront/EU-thread
-另外，可以用来处理多种多样的图像压缩和解压缩；local size可以作为图像数据的一个block的大小（例如8x8）,group数量可以是图像的尺寸除以块的尺寸。每个块被当作一个单独的work group来处理。
-[2]
+这样做的好处一个是可以利用gpu的warp/wavefront/EU-thread[2][3]
+另外，可以用来处理多种多样的图像压缩和解压缩；local size可以作为图像数据的一个block的大小（例如8x8）,group数量可以是图像的尺寸除以块的尺寸。每个块被当作一个单独的work group来处理[5]。
 -->
 
 ---
 ### thread groups
 <img src=Pics/threadgroupids.png height=540/>
 <!--
+[6]
 Dispatch 5x3x2
 numthreads 10x8x3
-这些一般是用来作为索引来获取Buffer或Texture里的数据
-[6]
+各种id一般是用来作为索引来获取Buffer或Texture里的数据[5]
 -->
 
 ---
@@ -180,7 +177,6 @@ RWStructuredBuffer with counter
 (RW)ByteAddressBuffer
 AppendStructuredBuffer
 ConsumeStructuredBuffer
-
 StructuredBuffer除了可以包含各种内置的类型之外
 还可以包含自定义的struct
 [5][6]
@@ -208,11 +204,11 @@ AllMemoryBarrier
 AllMemoryBarrierWithGroupSync
 ```
 <!--
+[6]
 GroupMemoryBarrier用于等待对groupshared变量的访问
 DeviceMemoryBarrier用于等待对texture或buffer的访问
 AllMemoryBarrier是以上两者的和
-WithGroupSync版本是需要同步本组内所有线程到达当前指令
-[6]
+*WithGroupSync版本是需要同步本组内所有线程到达当前指令
 -->
 
 ---
@@ -259,11 +255,12 @@ InterlockedXor
 - *尽量保证内存连续性*
 - *使用[unroll]来打开循环，有些时候需要手动unroll*
 <!--
-Group之间的交互很慢，并且容易崩溃或者GPU挂掉
-wavefront/warp/EU-thread实际上是一种SIMD技术，（但是Mali不需要这种优化，Metal可以通过api获取这个值）
-回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。
-剩下的一些Tips在渲染管线中也同样适用
-[2][3][7][8][20][22][23]
+硬件不支持全局同步[2]，不同步的话容易导致错误和崩溃[3]
+wavefront/warp/EU-thread实际上是一种SIMD技术，[2][3]
+但是Mali不需要这种优化[8]
+Metal可以通过api获取这个值[7]
+回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。[20]
+剩下的一些Tips在渲染管线中也同样适用[22][23]
 -->
 
 ---
@@ -290,9 +287,8 @@ wavefront/warp/EU-thread实际上是一种SIMD技术，（但是Mali不需要这
 ### Image Processing
 ![](Pics/cs_filters.jpg)
 <!--
-图为去色的图像处理
-rgb与(0.299,0.587,0.114)进行dot，获得灰度值
-[12][24]
+图为去色的图像处理[12]
+rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
 -->
 
 ---
@@ -308,9 +304,10 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值
 ### Tessellation
 ![](Pics/tessellation.jpg)
 <!--
+[15]
 默认管线中的Tessellation比较受限，可以使用Displacement mapping来增加它的灵活性。
 不过配合CS一起使用，你会开启新世界的大门。
-[14][15]
+[14]
 -->
 
 ---
