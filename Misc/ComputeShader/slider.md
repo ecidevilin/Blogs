@@ -114,7 +114,6 @@ Metal和Vulkan都支持CS[4][7][19]
 ---
 ### 计算管线（硬件端）
 ![](Pics/ComputePipeline.png)
-Simple, but not easy.
 
 <!--Compute Shader可以在不通过渲染管线的情况下，利用GPU完成一些与图像渲染不直接相关的工作。这样就可以降低硬件的overhead。
 [3]
@@ -309,7 +308,7 @@ InterlockedXor
 Metal可以通过api获取这个值[7]
 (3)回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下。[20]
 (4)如果是warp的整数倍，就还好[2][26]
-剩下的一些Tips在渲染管线中也同样适用[22][23]
+剩下的一些Tips在渲染管线中也同样适用[22]
 -->
 
 ---
@@ -342,6 +341,7 @@ Metal可以通过api获取这个值[7]
 图为去色的图像处理[12]
 rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
 类似的还有eye adaptation, color grading等等[3]
+Unity的PPS2中使用的histogram就是一个很好的例子，用到了CS的很多语法。[23]
 -->
 
 ---
@@ -379,6 +379,8 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
 
 <!--Hiz Occ
 图片来源，知乎大V MaxwellGeng实现的GPU Occlusiong Culling
+他使用了Hiz的方法，对cluster进行遮挡剔除。
+而这种思想就是GPUDRP。
 [17]
 -->
 
@@ -392,6 +394,19 @@ rgb与(0.299,0.587,0.114)进行dot，获得灰度值[24]
 
 ---
 ### 还有很多很多……
+
+---
+### Simple, but not easy.
+![bg](Pics/future.jpg)
+<!--
+ES从3.1开始支持CS[5][19]，也就是说，在手机上的支持率并不是很高。[3]
+另外，手机算力还是很低。
+floating point operations per second
+GTX 1050 Ti的算力是1.9k~2.9k Gflops，有768个core
+华为P20的Mali-G72 MP12的算力是300+ Gflops，只有12个core
+所以，CS在手机上的使用，是困难的，但是有巨大潜力的。
+[28]
+-->
 
 ---
 ## 引用
@@ -423,9 +438,10 @@ Optimizations and Best Practices](http://on-demand.gputechconf.com/gtc/2010/pres
 21. [Volume Tiled Forward Shading (Github)](https://github.com/jpvanoosten/VolumeTiledForwardShading)
 ---
 ## 引用
-22. [Low-level Shader Optimization for Next-Gen and DX11 (ppt)](http://www.humus.name/Articles/Persson_LowlevelShaderOptimization.pptx)
-23. [Low-Level Shader Optimization for Next-Gen and DX11 (video)](https://www.gdcvault.com/play/1020352/Low-Level-Shader-Optimization-for)
+22. Low-level Shader Optimization for Next-Gen and DX11 [(ppt)](http://www.humus.name/Articles/Persson_LowlevelShaderOptimization.pptx) [(video)](https://www.gdcvault.com/play/1020352/Low-Level-Shader-Optimization-for)
+23. [Post-processing Stack v2 (Github)](https://github.com/Unity-Technologies/PostProcessing)
 24. 数字图像处理（冈萨雷斯）
 25. [General-purpose computing on graphics processing units (Wikipedia)](https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units)
 26.  全局光照技术：从离线到实时渲染
 27.  [Mythbusters Demo GPU versus CPU ( NVIDIA )](http://v.youku.com/v_show/id_XNjY3MTY4NjAw.html)
+28.  [Glops](https://gflops.surge.sh/)
