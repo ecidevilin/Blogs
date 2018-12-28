@@ -15,4 +15,4 @@ https://zhuanlan.zhihu.com/p/43497430
 ## Unity动态网格简化算法
 https://zhuanlan.zhihu.com/p/48287438
 
-## Compute Shader 入门精要
+## Compute Shader : Optimize your game using compute
