@@ -16,3 +16,4 @@ https://zhuanlan.zhihu.com/p/43497430
 https://zhuanlan.zhihu.com/p/48287438
 
 ## Compute Shader : Optimize your game using compute
+[slider](Misc/ComputeShader/slider.pdf)
