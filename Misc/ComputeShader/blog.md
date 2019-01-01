@@ -1,6 +1,6 @@
 # Compute Shader : Optimize your game using compute
 
-# ![](Pics/icon.png)
+# ![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/icon.png?raw=true)
 
 本文章标题来源于来源于AMD在4C上的一个演讲：
 Compute Shaders: Optimize your engine using compute <sup>[3]</sup>
@@ -13,39 +13,39 @@ Compute Shader是在GPU上运行的程序。虽然是老生常谈了，但是我
 
 
 ### CPU是基于低延迟的设计
-![](Pics/CPU_Design.png)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/CPU_Design.png?raw=true)
 
 
 CPU有很强大算术逻辑单元，减少操作延迟；巨大的cache，为了降低内存访问的延迟；复杂的控制器，使用分支预测来减少分支延迟，使用数据转发减少数据延迟。
 
-CPU擅长逻辑控制和串行的运算。<sup>[1]</sup>
+我们可以这样说：CPU擅长逻辑控制和串行的运算。<sup>[1]</sup>
 
 
 ### GPU是基于大吞吐量的设计
-![](Pics/GPU_Design.png)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/GPU_Design.png?raw=true)
 
 GPU有小的cache，用来促进吞吐量；简单的控制，没有分支预测和数据转发；高效节能的ALU，很多延迟很长的ALU，但是为了高吞吐量被重度管线化；需要开启大量的线程才能降低延迟。
 
-GPU适用于计算密集型和易于并发的程序。<sup>[1][2]</sup>
+相应地，我们可以这样说：GPU适用于计算密集型和易于并发的程序。<sup>[1][2]</sup>
 
 
 ### GPGPU
 
-可以看出，CPU和GPU各有自己的擅长，那么我们可以将二者结合起来，使用CPU做串行，而使用GPU做并行。<sup>[1]</sup>这种技术就叫做GPGPU，也就是利用GPU进行通用计算的技术（General Purpose Computing on GPU）。
+可以看出，CPU和GPU各有自己的擅长，那么我们可以将二者结合起来，使用CPU做串行，而使用GPU做并行。这种技术就叫做GPGPU，也就是利用GPU进行通用计算的技术（General Purpose Computing on GPU）<sup>[1]</sup>。
 
-![](Pics/GPGPU.jpg)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/GPGPU.jpg?raw=true)
 
 但是，我们知道，通常来讲，GPU是用来执行图形渲染的。那么，为了执行通用计算，NV推出了CUDA，Khronos推出了OpenCL，Microsoft推出了DirectCompute，也就是后来的Compute Shader，然后，各种图形API也相继推出了CS。<sup>[25]</sup>
 
 
 ### 支持Compute Shader的图形API
-![](Pics/DirectX10.jpg) ![](Pics/DirectX11.jpg) ![](Pics/DirectX12.jpg)
-![4.3](Pics/OpenGL.png) ![3.1](Pics/OpenGLES.png)
-![](Pics/Metal.png) ![](Pics/Vulkan.png)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/DirectX10.jpg) ![](Pics/DirectX11.jpg) ![](Pics/DirectX12.jpg?raw=true)
+![4.3](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/OpenGL.png) ![3.1](Pics/OpenGLES.png?raw=true)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/Metal.png) ![](Pics/Vulkan.png?raw=true)
 
 DX虽然从10开始支持Compute Shader/Direct Compute，但是限制比较大。DX11的Compute Shader拥有更强大的功能（当然肯定还有DX12）<sup>[6]</sup>。所以我们一般在Unity中使用CS，还是要求shader target4.5（也就是shader model 5）<sup>[19]</sup>。
 
-OpenGL从4.3开始支持CS，但是MacOSX不支持4.3。ES从3.1开始支持CS<sup>[5]</sup>。
+OpenGL从4.3开始支持CS（但是MacOSX不支持4.3）。ES从3.1开始支持CS<sup>[5]</sup>。
 
 Metal和Vulkan都支持CS<sup>[4][7]</sup>。
 
@@ -53,26 +53,29 @@ Metal和Vulkan都支持CS<sup>[4][7]</sup>。
 
 
 ### Compute管线与图形管线的对比
-![](Pics/CompareToGraphics.png)
+
+我们通过几张图，来简单对比一下计算管线与传统图形管线有什么不同。
+
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/CompareToGraphics.png?raw=true)
 
 我们可以看到，计算管线变得很简单<sup>[3]</sup>。
 
 （关于GPU Rendering Pipeline，可以参考这张图<sup>[14]</sup> https://github.com/ecidevilin/Blogs/blob/master/IntroTo3DGPWithDX/Tessellation/pic/pipeline.jpg）
 
+从硬件端来看：
 
-### 图形管线（硬件端）
-![](Pics/GraphicsPipeline.png)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/GraphicsPipeline.png?raw=true)
 
 上图是图形管线在硬件端的工作流程<sup>[3]</sup>。
 
-
-### 计算管线（硬件端）
-![](Pics/ComputePipeline.png)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/ComputePipeline.png?raw=true)
 
 上图是计算管线在硬件端的工作流程<sup>[3]</sup>。
 
 通过对比，我们可以看出：
-Compute Shader可以在不通过渲染管线的情况下，利用GPU完成一些与图像渲染不直接相关的工作。这样就可以降低硬件的overhead。
+Compute Shader可以在不通过渲染管线的情况下，利用GPU完成一些与图像渲染不直接相关的工作，从而降低硬件的overhead。
+
+这就是Compute Shader的优势。
 
 ---
 ## 语法
@@ -119,8 +122,8 @@ public void Dispatch(int kernelIndex,
 那么什么又是线程组？
 
 
-### numthreads
-![](Pics/ThreadGroups.png)
+### 线程组
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/ThreadGroups.png?raw=true)
 
 
 在CS里面，线程可以分为三个维度<sup>[2]</sup>。
@@ -138,8 +141,6 @@ thread group是指将多个线程组合成为一个group，在这个group里面�
 另外，举个例子，现在很多图像压缩算法都是基于block的，而thread group（OpenGL里叫做local size）可以为图像数据的一个block的大小（例如8x8）,group数量可以是图像的尺寸除以块的尺寸。每个块被当作一个单独的work group来处理，并且group内可以共享一些信息<sup>[5]</sup>。
 
 
-
-### thread groups
 更进一步的，我们可以看下图<sup>[6]</sup>。
 
 <img src=Pics/threadgroupids.png height=540/>
@@ -183,9 +184,7 @@ StructuredBuffer除了可以包含各种内置的类型之外，还可以包含�
 
 使用这种变量，就可以在thread group内进行通讯。
 
-例如，我们可以在forward+/Deferred管线里使用compute shader对点光源进行剔除。
-
-这个是在战地3中使用的技术<sup>[16][21]</sup>。
+例如，我们可以在forward+/Deferred管线里使用compute shader对点光源进行剔除。这个是在战地3中使用的技术<sup>[16][21]</sup>。
 
 ### Barrier
 
@@ -261,38 +260,38 @@ InterlockedXor
 图为用CS实现的GPU粒子系统，这个功能中使用CS计算粒子的运动轨迹<sup>[10]</sup>。
 
 ### GPU Simulation
-![](Pics/GPUCloth.png)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/GPUCloth.png?raw=true)
 
 图为布料模拟，使用了CS进行布料粒子的受力运动计算、碰撞检测和反馈，以及约束计算。类似的还有头发模拟和海水模拟<sup>[11]</sup>。
 
 ### Image Processing
-![](Pics/cs_filters.jpg)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/cs_filters.jpg?raw=true)
 
 图为一个简单的去色的图像处理<sup>[12]</sup>，将rgb与(0.299,0.587,0.114)进行dot，获得灰度值<sup>[24]</sup>。类似的还有eye adaptation, color grading等等[3]。
 
 Unity的PPS2中使用的histogram就是一个很好的例子，几乎用到了CS的所有feature<sup>[23]</sup>。
 
 ### Image Compression
-![](Pics/ImageCompression.png)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/ImageCompression.png?raw=true)
 
 图为ASTC算法压缩过的图像（4x4 6x6 8x8）<sup>[13]</sup>。
 上面提到过，我们可以使用CS来实现基于Block的纹理压缩算法。
 
 
 ### Tessellation
-![](Pics/tessellation.jpg)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/tessellation.jpg?raw=true)
 
 曲面细分<sup>[15]</sup>：默认管线中的Tessellation比较受限，虽然可以使用Displacement mapping来提升它的效果，但是仍然不够动态。
 
 我们配合CS一起使用，我们可以配合一些逻辑更自由更动态的生成细分顶点<sup>[14][3]</sup>。
 
 ### Local lights culling
-![](Pics/battlefield3.jpg)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/battlefield3.jpg?raw=true)
 
 战地3中，使用的是Deffered shading pipeline，通过cs对点光源、探照灯等光源进行剔除<sup>[16]</sup>。
 
 ### Occlusion culling
-![](Pics/HizOcc.jpg)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/HizOcc.jpg?raw=true)
 
 图片来源，知乎大V MaxwellGeng实现的GPU Occlusiong Culling，他使用了Hiz的方法，对cluster进行遮挡剔除<sup>[17]</sup>。
 
@@ -300,7 +299,7 @@ Unity的PPS2中使用的histogram就是一个很好的例子，几乎用到了CS
 
 
 ### GPU Driven Rendering Pipeline
-![](Pics/GPUDRP.jpg)
+![](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/GPUDRP.jpg?raw=true)
 
 图为刺客信条大革命，在这部游戏中使用了GPUDRP技术，并在Siggraph 2015: Advances in Real-Time Rendering in Games course中发表<sup>[18]</sup>。
 
@@ -316,11 +315,9 @@ ES从3.1开始支持CS，也就是说，在手机上的支持率并不是很高�
 
 所以，CS在手机上的使用，是困难的。
 
-但是，我相信它是有巨大潜力的，随着手机硬件的高速发展，我相信，用不了多久，Compute Shader的使用就可以在手机上普及。
+但是，我认为它是有巨大潜力的，随着手机硬件的高速发展，我相信，用不了多久，Compute Shader的使用就可以在手机上普及。
 
-我认为，我们不应该桎梏于当下，应该拥抱变化，拥抱未来。
-
-![bg](Pics/future.jpg)
+![bg](https://github.com/ecidevilin/Blogs/tree/master/Misc/ComputeShader/Pics/future.jpg?raw=true)
 
 ---
 ## 引用
