@@ -1,6 +1,6 @@
 # Compute Shader : Optimize your game using compute
 
-# ![](https://github.com/ecidevilin/Blogs/blob/master/Misc/ComputeShader/Pics/icon.png?raw=true)
+# ![](https://github.com/ecidevilin/Blogs/blob/master/Misc/ComputeShader/Pics/icon.jpg?raw=true)
 
 本文章标题来源于来源于AMD在4C上的一个演讲：
 Compute Shaders: Optimize your engine using compute <sup>[3]</sup>
@@ -161,10 +161,11 @@ CS可以使用一些常规的类型，标量、向量、矩阵、纹理、数组
 
 除此之外，为了更灵活的使用CS，还推出了StructuredBuffer，简称SBuffer。
 
-| GPU Side | CPU Side |
-|-----|-----|
-|\*StructuredBuffer|ComputeBuffer|
-|RWTexture\*D|RenderTexture|
+GPU Side 				CPU Side
+
+\*StructuredBuffer 		ComputeBuffer
+
+RWTexture\*D 			RenderTexture|
 
 
 （SBuffer在fs里也可以使用，在其他shader里也可能可以使用。）
