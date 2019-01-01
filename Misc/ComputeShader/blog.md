@@ -143,7 +143,7 @@ thread group是指将多个线程组合成为一个group，在这个group里面�
 
 更进一步的，我们可以看下图<sup>[6]</sup>。
 
-<img src=Pics/threadgroupids.png height=540/>
+![](https://github.com/ecidevilin/Blogs/blob/master/Misc/ComputeShader/Pics/threadgroupids.png?raw=true)
 
 上半图代表了一个5x3x2的dispatch，图中的坐标代表一个thread group。
 
@@ -255,7 +255,7 @@ InterlockedXor
 那么介绍过CS之后，我们看看，目前都有哪些应用。
 
 ### GPU Particle System
-<img src=Pics/GPUParticles.png height=540>
+![](https://github.com/ecidevilin/Blogs/blob/master/Misc/ComputeShader/Pics/GPUParticles.png?raw=true)
 
 图为用CS实现的GPU粒子系统，这个功能中使用CS计算粒子的运动轨迹<sup>[10]</sup>。
 
@@ -317,7 +317,7 @@ ES从3.1开始支持CS，也就是说，在手机上的支持率并不是很高�
 
 但是，我认为它是有巨大潜力的，随着手机硬件的高速发展，我相信，用不了多久，Compute Shader的使用就可以在手机上普及。
 
-![bg](Pics/future.jpg)
+![](https://github.com/ecidevilin/Blogs/blob/master/Misc/ComputeShader/Pics/future.jpg?raw=true)
 
 ---
 ## 引用
