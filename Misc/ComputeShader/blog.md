@@ -73,7 +73,7 @@ Metal和Vulkan都支持CS<sup>[4][7]</sup>。
 上图是计算管线在硬件端的工作流程<sup>[3]</sup>。
 
 通过对比，我们可以看出：
-Compute Shader可以在不通过渲染管线的情况下，利用GPU完成一些与图像渲染不直接相关的工作，从而降低硬件的overhead。
+Compute Shader可以在不通过渲染管线的情况下，利用GPU完成一些与图形渲染不直接相关的工作，从而降低硬件的overhead。
 
 这就是Compute Shader的优势。
 
@@ -161,11 +161,10 @@ CS可以使用一些常规的类型，标量、向量、矩阵、纹理、数组
 
 除此之外，为了更灵活的使用CS，还推出了StructuredBuffer，简称SBuffer。
 
-GPU Side 				CPU Side
-
-\*StructuredBuffer 		ComputeBuffer
-
-RWTexture\*D 			RenderTexture|
+| GPU Side | CPU Side |
+|-----|-----|
+|\*StructuredBuffer|ComputeBuffer|
+|RWTexture\*D|RenderTexture|
 
 
 （SBuffer在fs里也可以使用，在其他shader里也可能可以使用。）
@@ -243,9 +242,9 @@ InterlockedXor
 ### 性能优化
 另外，在使用CS的时候，我们还需要知道一些性能优化点。
 1. 尽量减少Group之间的交互：硬件不支持全局同步<sup>[2]</sup>，不同步的话容易导致错误和崩溃<sup>[3]</sup>。
-2. GPU一次Dispatch会调用64（AMD成为wavefront）或32（NVIDIA称为warp）个线程（这实际上是一宗SIMD技术），所以，numthreads的乘积最好是这个值的整数倍。但是Mali不需要这种优化<sup>[8]</sup>。此外，Metal可以通过api获取这个值<sup>[7]</sup>。
+2. GPU一次Dispatch会调用64（AMD成为wavefront）或32（NVIDIA称为warp）个线程（这实际上是一种SIMD技术），所以，numthreads的乘积最好是这个值的整数倍。但是Mali不需要这种优化<sup>[8]</sup>。此外，Metal可以通过api获取这个值<sup>[7]</sup>。
 3. 避免回读：回读操作在渲染管线中使用的比较少，而在CS中可能会被用到，所以重点提一下<sup>[20]</sup>。
-4. 避免分支，重点避免在thread group中间的分支，这其实跟第二点是相关的，如果在wavefront/warp蒸熟倍的地方发生分支，消耗就会小很多<sup>[2][26]</sup>。
+4. 避免分支，重点避免在thread group中间的分支，这其实跟第二点是相关的，如果在wavefront/warp整数倍的地方发生分支，消耗就会小很多<sup>[2][26]</sup>。
 5. 尽量保证内存连续性<sup>[2]</sup>。
 6. 使用[unroll]来打开循环，有些时候需要手动unroll<sup>[22]</sup>。
 
