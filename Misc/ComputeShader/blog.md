@@ -3,7 +3,7 @@
 # ![](https://github.com/ecidevilin/Blogs/blob/master/Misc/ComputeShader/Pics/icon.jpg?raw=true)
 
 本文章标题来源于来源于AMD在4C上的一个演讲：
-Compute Shaders: Optimize your engine using compute ^[3]
+Compute Shaders: Optimize your engine using compute [^3]
 
 
 ---
