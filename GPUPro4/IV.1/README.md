@@ -13,7 +13,7 @@ Deep shadowmap主要应用在头发和烟雾渲染中，对于增强二者的体
 在灯光空间光栅化之后，图（a）灰色的部分表示对象的深度，白色的部分表示远切面，而斜线的部分表示对象占了一部分像素点。
 我们知道，在常规Shadow Maps中，前向渲染的对象，会变换到灯光空间，与灯光空间的Shadow Maps中的深度值进行比较。如果离光源远，则表示当前像素处于阴影中，否则，不在阴影中。而图（a）中斜线的部分则是半影（penumbrae），可以使用PCF等技术来实现。
 
-但是，如图（b）所示，超细头发在光栅化之后，单根头发无法覆盖完整像素，一个像素里可能有多根头发，像素之间也没有连续性。这种情况，就无法很好的使用Shadow Maps。所以引入Deep Shadow Maps的方法计算头发的阴影。
+但是，如图（b）所示，超细头发在光栅化之后，单根头发无法覆盖完整像素，一个像素点上也可能有多根头发，像素之间也没有连续性。这种情况，就无法很好的使用Shadow Maps。所以引入Deep Shadow Maps的方法计算头发的阴影。
 
 ![Transmit](https://github.com/ecidevilin/Blogs/blob/master/GPUPro4/IV.1/pic/Transmit.png?raw=true) 
 
@@ -22,6 +22,8 @@ Deep shadowmap主要应用在头发和烟雾渲染中，对于增强二者的体
 <img src=https://www.zhihu.com/equation?tex=%5Ctau(d)%3D%5Cprod_%7Bi%3D0%7D%5E%7Bn(d)%7D(1-%5Calpha_%7Bi%7D)&preview=true>
 
 公式很简单，其实就是累乘像素的1-α。
+
+以下为对比图：
 
 ![NoShadow](https://github.com/ecidevilin/Blogs/blob/master/GPUPro4/IV.1/pic/NoShadow.png?raw=true) 
 
