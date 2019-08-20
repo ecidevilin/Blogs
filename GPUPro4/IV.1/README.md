@@ -72,7 +72,7 @@ GPU Pro 4第四章中介绍了Deep Shadow Maps的实时做法，使用了Compute
 
 大致代码如下：
 
-、、、ShaderLab
+```ShaderLab
 			void frag(v2f i)
             {
                 float3 posInLight = i.lightScreenPos;
@@ -83,7 +83,7 @@ GPU Pro 4第四章中介绍了Deep Shadow Maps的实时做法，使用了Compute
                 InterlockedExchange(HeaderList[((uint)posInLight.y) * Dimension + (uint)posInLight.x], counter, originalVal);
                 LinkedList[counter].next = originalVal;
             }
-、、、
+```
 
 
 链表法的缺点就在于内存（显存）不连续，后续计算中，效率会受影响。
@@ -94,7 +94,7 @@ GPU Pro 4第四章中介绍了Deep Shadow Maps的实时做法，使用了Compute
 
 大致代码如下：
 
-、、、ShaderLab
+```ShaderLab
 			void frag(v2f i)
             {
                 float3 posInLight = i.lightScreenPos;
@@ -106,7 +106,7 @@ GPU Pro 4第四章中介绍了Deep Shadow Maps的实时做法，使用了Compute
 				DepthBuffer[offset + originalVal].x = posInLight.z;
 				DepthBuffer[offset + originalVal].y = _HairAlpha;
             }
-、、、
+```
 
 
 数组法的缺点在于需要申请的内存（显存）过大，同样也会影响计算效率。
