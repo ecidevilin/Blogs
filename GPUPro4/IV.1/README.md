@@ -2,7 +2,7 @@
 
 屏幕空间深度阴影贴图
 
-Deep shadowmap主要应用在头发和烟雾渲染中，对于增强二者的体积感起到了很关键的作用。本文解和Deep Shadow Maps和Screen Space Shadowmaps技术，在屏幕空间结算阴影，主要用在头发渲染上。本文使用了Compute Shader，需要了解相关内容的，可以看我专栏里另一篇介绍Compute的文章（Compute Shader : Optimize your game using compute）。
+Deep shadowmap主要应用在头发和烟雾渲染中，对于增强二者的体积感起到了很关键的作用。本文结合Deep Shadow Maps和Screen Space Shadowmaps技术，在屏幕空间结算阴影，主要用在头发渲染上。本文使用了Compute Shader（虽然并不必要）和StructuredBuffer（必要），需要了解相关内容的，可以看我专栏里另一篇介绍Compute的文章（Compute Shader : Optimize your game using compute）。
 
 # 概述
 
