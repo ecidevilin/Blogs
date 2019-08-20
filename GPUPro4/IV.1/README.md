@@ -73,7 +73,8 @@ GPU Pro 4第四章中介绍了Deep Shadow Maps的实时做法，使用了Compute
 大致代码如下：
 
 ```ShaderLab
-			void frag(v2f i)
+			
+            void frag(v2f i)
             {
                 float3 posInLight = i.lightScreenPos;
                 int counter = LinkedList.IncrementCounter();
@@ -95,7 +96,8 @@ GPU Pro 4第四章中介绍了Deep Shadow Maps的实时做法，使用了Compute
 大致代码如下：
 
 ```ShaderLab
-			void frag(v2f i)
+			
+            void frag(v2f i)
             {
                 float3 posInLight = i.lightScreenPos;
 				uint idx = ((uint)posInLight.y) * Dimension + (uint)posInLight.x;
@@ -137,7 +139,7 @@ GPU Pro 4中建议使用延迟渲染来进行阴影着色，原文中，不仅�
 
 https://github.com/ecidevilin/DeepShadowMap
 
-这个版本你写的比较潦草（都没有手动构建灯光矩阵），后续会整合到我的KhaosLWRP里。
+这个版本写得比较潦草（都没有手动构建灯光矩阵），后续会整合到我的KhaosLWRP里。
 
 https://github.com/ecidevilin/KhaosLWRP
 
