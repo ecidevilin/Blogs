@@ -1,0 +1,1 @@
+\tau(d)=\prod_{i=0}^{n(d)}(1-\alpha_{i})
