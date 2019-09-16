@@ -8,7 +8,7 @@
 
 因为结算阴影也是在屏幕空间，所以，对于屏幕上一个像素点来说，它是一个定值，完全可以从公式中提取出来，无所谓混合了几层。对于（粒子）烟雾来讲，排序之后，按照由远及近的方式进行渲染，可以在frag里直接采样SSDSM的Lut，使阴影参与着色。
 
-然而，这还没有完，因为我要做的是头发，一般是复杂的几何模型（例如小卷发），模型本身不是闭合的，甚至会有自相交，这种情况就无法使用排序（除非片元级排序）来解决半透明着色问题。为了解决这个问题，本文使用了基于矩的顺序无关半透明渲染（Moment-Based Order-Independent Transparency）。
+然而，对于我来说，这还没有完，因为我要做的是头发，一般是复杂的几何模型（例如小卷发），模型本身不是闭合的，甚至会有自相交，这种情况就无法使用排序（除非片元级排序）来解决半透明着色问题。为了解决这个问题，本文使用了基于矩的顺序无关半透明渲染（Moment-Based Order-Independent Transparency）。
 
 此外，本文还将阐述，如何将Screen Space Deep Shadowmaps与之融合。
 
@@ -28,7 +28,7 @@
 
 观察这个公式，我们就会发现：在进行半透明渲染的时候，我们无法知道同一屏幕坐标上，哪些片元的深度值小于当前片元。所以在没有排序的情况下，直接使用默认混合方式进行Alpha混合，结果就会出错。
 
-那么如何解决这个问题？其实完全可以参考Deep Shadow Maps的做法，使用链表来对片元进行排序，对我来说没什么难度。所以，考虑使用Moment-Based Order-Independent Transparency（引用文献1）。
+那么如何解决这个问题？其实完全可以参考Deep Shadow Maps的做法，使用链表来对片元进行排序。这对我来说没什么难度，不过我想搞点新东西，所以，考虑使用Moment-Based Order-Independent Transparency（引用文献1）。
 
 
 # 基于矩的顺序无关半透明渲染
@@ -39,11 +39,10 @@
 
 ![moit](https://github.com/ecidevilin/Blogs/blob/master/Misc/MOIT/pic/moit.png?raw=true) 
 
-下面我们就按照原文的顺序来阐述这个方法的步骤：
 
 ## 渲染不透明物体
 
-略
+首先，我们还是按照常规的顺序，将不透明物体绘制出来。
 
 ## 使用矩来表示吸收率
 
@@ -94,7 +93,7 @@
 
 <img src=https://www.zhihu.com/equation?tex=%5Csum_%7Bl%3D0%7D%5E%7Bn-1%7D%7BL_l%20%5Ccdot%20%5Calpha_l%20%5Ccdot%20T(z_f%2Cb%2C%5Cbeta)%7D&preview=true>
 
-也就是说，我们重新渲染半透明物体，对于每个片元，用他们的颜色(L<sub>l</sub>)乘以不透明度和透射率，使用Blend One One的方式将它们累加起来。至于α通道里面存的是什么？
+也就是说，我们重新渲染半透明物体，对于每个片元，用他们的颜色(L<sub>l</sub>)乘以不透明度和透射率，使用Blend One One的方式将它们累加起来。那么α通道里面存的是什么？
 
 <img src=https://www.zhihu.com/equation?tex=%5Csum_%7Bl%3D0%7D%5E%7Bn-1%7D%7B%5Calpha_l%5Ccdot%20T(z_f%2Cb%2C%5Cbeta)%7D&preview=true>
 
@@ -108,26 +107,26 @@
 
 ## 合并
 
-这一步，我们要将半透明的render target和不透明的render target进行合并，这其实就相当于一个全屏后处理。
+这一步，我们要将半透明的render target和不透明的render target进行合并，也就是blit。
 
-前面提到的第0个矩，其实保存了像素坐标上总体的吸收率：
+前面提到矩中，第0个矩保存了像素坐标上总体的吸收率：
 
 <img src=https://www.zhihu.com/equation?tex=b_0%3D%5Csum_%7Bl%3D0%7D%5E%7Bn-1%7D%7B-ln(1-%5Calpha_l)%7D&preview=true>
 
-exp(-b<sub>0</sub>)为当前屏幕坐标上，总体的透射率，这个值会在最后的合成阶段使用到，所以存到一个单独的render target里面。
+所以，exp(-b<sub>0</sub>)为当前屏幕坐标上，总体的透射率，它被单独存到一个render target里面，方便这一步进行计算。
 
 那么这一步里，我们就可以根据它来合并：
 
 <img src=https://www.zhihu.com/equation?tex=exp(-b_0)%20%5Ccdot%20L_n%2B%5Cfrac%7B1-exp(-b_0)%7D%7B%5Csum_%7Bl%3D0%7D%5E%7Bn-1%7D%7B%5Calpha_l%5Ccdot%20T(z_f%2Cb%2C%5Cbeta)%7D%7D%5Ccdot%5Csum_%7Bl%3D0%7D%5E%7Bn-1%7D%7BL_l%5Ccdot%20%5Calpha_l%20%5Ccdot%20T(z_f%2Cb%2C%5Cbeta)%7D&preview=true>
 
-分母的部分用来做归一化来近似能量守恒，而这个值已经保存到半透明render target的α通道里，直接用rgb通道的值除以它，然后用Blend OneMinusSrcAlpha SrcAlpha的方式（α通道为exp(-b<sub>0</sub>)）Blit到不透明render target上。
+分母的部分用来做归一化，来近似达到能量守恒的目的，而这个值已经在**重建透射率**这一步保存到半透明render target的α通道里，所以直接用rgb通道的值除以它，然后用Blend OneMinusSrcAlpha SrcAlpha的方式（α通道为exp(-b<sub>0</sub>)）Blit到不透明render target上。
 
 
 # 幂矩
 
-说了那么多，大家或许发现了，我略过了最重要的一个部分，那就是如何获得吸收率的近似函数A。
+说了那么多，大家或许发现了，前面略过了最重要的一个部分，那就是如何获得吸收率的近似函数A。
 
-前面提到了**b**是一个m+1维的矩：
+之前提到了**b**是一个m+1维的矩：
 
 <img src=https://www.zhihu.com/equation?tex=%5Cpmb%7Bb%7D(z)%3D(1%2Cz%2Cz%5E2%2C...%2Cz%5Em)%5ET&preview=true>
 
@@ -141,7 +140,7 @@ exp(-b<sub>0</sub>)为当前屏幕坐标上，总体的透射率，这个值会�
 
 <img src=https://www.zhihu.com/equation?tex=A%3DLDL%5ET%3D%5Cleft(%5Cbegin%7Bmatrix%7D1%260%260%5C%5C%20L_%7B10%7D%20%26%201%20%260%20%5C%5C%20L_%7B20%7D%20%26%20L_%7B21%7D%20%26%201%5Cend%7Bmatrix%7D%5Cright)%5Cleft(%5Cbegin%7Bmatrix%7DD_0%260%260%5C%5C0%26D_1%260%5C%5C0%260%26D_2%5Cend%7Bmatrix%7D%5Cright)%5Cleft(%5Cbegin%7Bmatrix%7D1%26L_%7B10%7D%26L_%7B20%7D%5C%5C0%261%26L_%7B21%7D%5C%5C0%260%261%5Cend%7Bmatrix%7D%5Cright)&preview=true>
 
-分解之后，求解大幅简化。
+分解之后，求解难度大幅简化。
 
 ## 构建脉冲分布函数
 
@@ -149,7 +148,7 @@ exp(-b<sub>0</sub>)为当前屏幕坐标上，总体的透射率，这个值会�
 
 <img src=https://www.zhihu.com/equation?tex=q_2%5Ccdot%20z%5E2%2Bq_1%20%5Ccdot%20z%20%2B%20q_0%20%3D%200&preview=true>
 
-求解z<sub>1</sub>和z<sub>2</sub>，构建脉冲分布函数。如果z<sub>l</sub>小于z<sub>f</sub>，则v<sub>l</sub>等于1，否则为0。
+得到z<sub>1</sub>和z<sub>2</sub>，构建脉冲分布函数。如果z<sub>l</sub>小于z<sub>f</sub>，则v<sub>l</sub>等于1，否则为0。
 
 ## Vandermonde矩阵
 
@@ -163,7 +162,7 @@ exp(-b<sub>0</sub>)为当前屏幕坐标上，总体的透射率，这个值会�
 
 <img src=https://www.zhihu.com/equation?tex=%5Csum_%7Bj%3D0%7D%5E%7B%5Cfrac%7Bm%7D%7B2%7D%7D%7Bb_j%5Ccdot%20u_j%7D&preview=true>
 
-通过上式重建吸收率A。但是还没完，透射率实际上等于exp(-A)。
+通过上式重建吸收率A，而透射率等于exp(-A)。
 
 
 # 融合阴影
