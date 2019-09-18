@@ -28,7 +28,7 @@
 
 观察这个公式，我们就会发现：在进行半透明渲染的时候，我们无法知道同一屏幕坐标上，哪些片元的深度值小于当前片元。所以在没有排序的情况下，直接使用默认混合方式进行Alpha混合，结果就会出错。
 
-那么如何解决这个问题？其实完全可以参考Deep Shadow Maps的做法，使用链表来对片元进行排序。这对我来说没什么难度，而且DX Sample（参考文献11）里面有现成的，那么我们就搞点新东西，所以，考虑使用Moment-Based Order-Independent Transparency（引用文献1）。
+那么如何解决这个问题？其实完全可以参考Deep Shadow Maps的做法，使用链表来对片元进行排序。这对我来说没什么难度，而且DX Sample（参考文献11）里面有现成的代码，那么我们就搞点新东西，所以，考虑使用Moment-Based Order-Independent Transparency（引用文献1）。
 
 
 # 基于矩的顺序无关半透明渲染
@@ -178,7 +178,7 @@
 
 完整实现我已经放到了我的github上：
 
-![https://github.com/ecidevilin/KhaosLWRP](https://github.com/ecidevilin/KhaosLWRP)
+[https://github.com/ecidevilin/KhaosLWRP](https://github.com/ecidevilin/KhaosLWRP)
 
 
 
