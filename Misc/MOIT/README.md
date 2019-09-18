@@ -28,7 +28,7 @@
 
 观察这个公式，我们就会发现：在进行半透明渲染的时候，我们无法知道同一屏幕坐标上，哪些片元的深度值小于当前片元。所以在没有排序的情况下，直接使用默认混合方式进行Alpha混合，结果就会出错。
 
-那么如何解决这个问题？其实完全可以参考Deep Shadow Maps的做法，使用链表来对片元进行排序。这对我来说没什么难度，不过我想搞点新东西，所以，考虑使用Moment-Based Order-Independent Transparency（引用文献1）。
+那么如何解决这个问题？其实完全可以参考Deep Shadow Maps的做法，使用链表来对片元进行排序。这对我来说没什么难度，而且DX Sample（参考文献11）里面有现成的，那么我们就搞点新东西，所以，考虑使用Moment-Based Order-Independent Transparency（引用文献1）。
 
 
 # 基于矩的顺序无关半透明渲染
@@ -131,6 +131,7 @@
 <img src=https://www.zhihu.com/equation?tex=%5Cpmb%7Bb%7D(z)%3D(1%2Cz%2Cz%5E2%2C...%2Cz%5Em)%5ET&preview=true>
 
 原文中使用了4维、6维、8维幂矩和2维、3维、4维三角矩（Trigonometric Moments），三角矩的效果有点辣眼睛，所以本文略过不提，只是简单介绍一下如何使用幂矩求解。另外，4维、6维和8维在求解方法上区别不大（8维需要求解4次多项式，比前二者更为复杂），所以本文以4维幂矩求解为例。
+（我们这里只讲解一下步骤，具体的证明在参考文献17里）
 
 ## Cholesky分解
 
@@ -194,3 +195,10 @@
 8. [概率论中「矩」（moment）的实际含义是什么，高阶矩表示数据的哪些状态？ - 荆哲的回答 - 知乎](https://www.zhihu.com/question/23236070/answer/143316942)
 9. [如何用简单的例子解释什么是 Generalized Method of Moments (GMM)？ - 慧航的回答 - 知乎](https://www.zhihu.com/question/41312883/answer/91484566)
 10. [Web端的实时透明渲染算法](https://zhuanlan.zhihu.com/p/49164063)
+11. [DirectX Software Development Kit](https://www.microsoft.com/en-us/download/confirmation.aspx?id=6812)
+12. ShaderX6
+13. Variance Shadow Mapping (http://www.punkuser.net/vsm/)
+14. Variance Shadow Mapping (NVidia) (https://developer.download.nvidia.com/SDK/10/direct3d/Source/VarianceShadowMapping/Doc/VarianceShadowMapping.pdf)
+15. Exponential Shadow Maps (http://jankautz.com/publications/esm_gi08.pdf)
+16. Advanced Soft Shadow Mapping Techniques (https://developer.download.nvidia.com/presentations/2008/GDC/GDC08_SoftShadowMapping.pdf)
+17. Supplementary Document on Moment Shadow Mapping
