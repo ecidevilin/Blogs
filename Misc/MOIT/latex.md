@@ -1,3 +1,5 @@
+\sum_{l=0}^{n-1}{L_l \cdot \alpha_l \cdot \prod_{k=0,z_k<z_l}^{n-1} (1-\alpha_k)}
+T(z_f)=\prod_{k=0,z_k<z_l}^{n-1} (1-\alpha_k)
 A(z_{f})=-lnT(z_{f})=\sum_{l=0,z_{l}<z_{f}}^{n-1}-ln(1-\alpha_{l})
 \delta_{z_l}=\begin{cases} 1&z_l < z_f \\ 0 & otherwise \end{cases}
 Z=\sum_{l=0}^{n-1}{-ln(1-\alpha_l)\cdot\delta_{z_l}}
