@@ -1,1 +1,3 @@
-*TODO: 3 5 6*
+# Shader X
+
+*To proofread: 3,5,6*

@@ -1,1 +1,3 @@
-*TODO: 4 5*
+# Graphics Gems
+
+*To proofread: 4,5*
