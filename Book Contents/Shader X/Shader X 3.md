@@ -1,8 +1,9 @@
 # SECTION 1 INTRODUCTION AND GEOME RY MANIPULATION TRICKS .. 1
 
-      Introduction .. ,Dean Calver
+      Introduction .. 3
+      Dean Calver
 
-1.1  Accessing and Modlfying Topology on the GPU ..................
+1.1  Accessing and Modlfying Topology on the GPU ..................5
 
       Dean Calver
 
@@ -14,21 +15,24 @@
 
       Christian Kleinbuis
 
-1.4  Morphing Between Two Different Objects. .........
+1.4  Morphing Between Two Different Objects. .........37
 
       Ronny Burkersroda
 
-1.5  Silhouette Geometry Shaders  49
+1.5  Silhouette Geometry Shaders ......... 49
 
       Jörn Loviscach
 
-1.6  GLSL Real-Time Shader Development........
+1.6  GLSL Real-Time Shader Development........57
 
       Natalya Tatarcbuk and Bill Licea -Kane
 
-# SECTION 2 RENDERING TECHNIQUES........
+# SECTION 2 RENDERING TECHNIQUES........85
 
-      Introduction .. ,Nicolas Thibieroz2.1  Parallax Mapping
+      Introduction .. 87
+      Nicolas Thibieroz
+
+2.1  Parallax Mapping........89
 
       Terry Welsh
 
@@ -43,9 +47,12 @@
 2.4  Massively Parallel Particle Systems on the GPU ............. 119
 
       Lutz Latta
+
 2.5  Parallax Occlusion Mapping: Self-Shadowing, Perspective -Correct
 
-      Bump Mapping Using Reverse Height Map Tracing. ........135Zoe Brawley and Natalya Tatarcbuk
+      Bump Mapping Using Reverse Height Map Tracing. ........135
+      
+      Zoe Brawley and Natalya Tatarcbuk
 
 2.6  Improved Batching via Texture Atlases.......................155
 
@@ -67,11 +74,11 @@
 
       Markus Nuebel
 
-2.11  Detail Texture Motion Blur ........
+2.11  Detail Texture Motion Blur ........205
 
       Sbawn Hargreaves
 
-2.12  Animation and Display of Water .......15
+2.12  Animation and Display of Water .......215
 
       Stefano Lanza
 
@@ -85,21 +92,26 @@
 
 2.15  Reduction of Lighting Calculations
 
-      Using Spherical Harmonics .............251Vlad Stamate
+      Using Spherical Harmonics .............251
+      
+      Vlad Stamate
 
-SEC TION 3 SOFTWARE SHADERS AND SHADER
+# SECTION 3 SOFTWARE SHADERS AND SHADER PROGRAMMING TiP................ .............263
 
-      PROGRAMMING TiP................ .............263
-
-      Introduction  265Dean Macri
+      Introduction ................ 265
+      
+      Dean Macri
 
 3.1  Optimizing Dx9 Vertex Shaders for
 
-      Software Vertex Processing .......  267Кеnt F Кпох
+      Software Vertex Processing .......  267
+      
+      Кеnt F Кпох
 
-3.2  Software Shaders and DirectX DLL Implementatio........... 279
+3.2  Software Shaders and DirectX DLL Implementation........... 279
 
       Nicolas Capens
+
   3.3  Tactical Path-Finding Using Stochastic Maps on the GPU .......... 313
 
       Khanb Pbong Ly
@@ -108,11 +120,13 @@ SEC TION 3 SOFTWARE SHADERS AND SHADER
 
       Chris Maughan and Daniel Horowitz
 
-      # SECTION 4 1MAGE SPACE
+# SECTION 4 IMAGE SPACE........................337
 
-      Introduction  339Jason L. Mitchell
+      Introduction ........................ 339
+      
+      Jason L. Mitchell
 
-      4.1  A Steerable Streak Filter .
+      4.1  A Steerable Streak Filter .........................341
 
       Chris Oat
 
@@ -136,9 +150,13 @@ SEC TION 3 SOFTWARE SHADERS AND SHADER
 
       Aras Pranckevicius
 
-      # SECTION 5 SHADOWS
+# SECTION 5 SHADOWS........................399
 
-      Introduction  ..401Eric Haines5.1
+      Introduction  ..........................401
+      
+      Eric Haines
+      
+      5.1 Poisson Shadow Blur ........................ 403
 
       Jason L. Mitchell
 
@@ -153,11 +171,14 @@ SEC TION 3 SOFTWARE SHADERS AND SHADER
       5.4  Efficient Omnidirectional Shadow Maps .........435
 
       Gary King and William Newball
+
 # SECTION 6 3D ENGINE DESIGN ..... ...................... . 449
 
-      Introduction ............................... 451Tom Forsyth
+      Introduction ............................... 451
+      
+      Tom Forsyth
 
-      6.,1  An Extensible Direct3D Resource Management System. ......... .453
+      6.1  An Extensible Direct3D Resource Management System. ......... .453
 
       Wessam Babnassi
 
@@ -173,17 +194,23 @@ SEC TION 3 SOFTWARE SHADERS AND SHADER
 
       Homam Bahnassi and Wessam Babnassi
 
-      6.5  Drawing a Crowd  505
+      6.5  Drawing a Crowd ........................ 505
 
       David R. Gosselin, Pedro V. Sander, and Jason L. Mitcbell
 
-      # SECTION 7TOOLS  519
+# SECTION 7 TOOLS ........................ 519
 
-      Introduction . ..................... ... ...........521Willem H. de Boer
+      Introduction . ..................... ... ...........521
+      
+      Willem H. de Boer
 
       7.1  In-Depth Performance Analyses of DirectX 9 Shading Hardware
 
-      Conceming Pixel Shader and Texture Performance . ........ .... 523Joachim Diepstraten and Mike Eißele7.2
+      Conceming Pixel Shader and Texture Performance . ........ .... 523
+      
+      Joachim Diepstraten and Mike Eißele
+      
+      7.2 Shaderbreaker ........................ 545
 
       Magnus Österlind
 
@@ -191,9 +218,11 @@ SEC TION 3 SOFTWARE SHADERS AND SHADER
 
       Shawn Hargreaves
 
-      # SECTION 8 ENVIRONMENTAL EFFECTS ........................569
+# SECTION 8 ENVIRONMENTAL EFFECTS ........................569
 
-      Introduction  , .571Willem H. de Boer
+      Introduction  ........................571
+      
+      Willem H. de Boer
 
       8.1  Light Shaft Rendering ......  ..573
 

@@ -1,93 +1,89 @@
-# l.  Polygons and Polyhedra
+# I.  Polygons and Polyhedra........................1
 
-      1.1.  Centroid of a Polygon by Gerard Bashein and Paul R. Detmer.  31.2.  Testing the Convexity of a Polygon by Peter Schorn and Frederick Fisher.
+      1.1.  Centroid of a Polygon by Gerard Bashein and Paul R. Detmer.........................  3
+      1.2.  Testing the Convexity of a Polygon by Peter Schorn and Frederick Fisher.........................7
 
-      1.3.  An Incremental Angle Point in Polygon Test by Kevin Weiler .  61.4.  Point in Polygon Strategies by Eric Haines  241.5.  Incremental Delaunay Triangulation by Dani Lischinski  174.6.  Building Vertex Normals from an Unstructured Polygon List by
-
-      Andrew Glassner.  01.7.  Detecting Intersection of a Rectangular Solid and a Convex Polyhedron by
-
-      Ned Greene  '41.8.  Fast Collision Detection of Moving Convex Polyhedra by Rich Rabbitz.  33
+      1.3.  An Incremental Angle Point in Polygon Test by Kevin Weiler .........................  16
+      1.4.  Point in Polygon Strategies by Eric Haines ........................ 24
+      1.5.  Incremental Delaunay Triangulation by Dani Lischinski ........................47
+      1.6.  Building Vertex Normals from an Unstructured Polygon List by Andrew Glassner.........................60
+      1.7.  Detecting Intersection of a Rectangular Solid and a Convex Polyhedron by Ned Greene........................74
+      1.8.  Fast Collision Detection of Moving Convex Polyhedra by Rich Rabbitz........................ 83
       
-# 11.  Geometry  111
+# II.  Geometry........................ 111
 
-      II.1.  Distance to an Elipsoid by John C. Hart.  .11Il.2  Fast Linear Approximations of Euclidean Distance in Higher Dimensions
+      II.1.  Distance to an Elipsoid by John C. Hart.  .........................113
+      II.2  Fast Linear Approximations of Euclidean Distance in Higher Dimensions by Yoshikazu Ohashi ........................ 120
+      II.3.  Direct Outcode Calculation for Faster Clip Testing by Walt Donovan and Tim Van Hook.........................125
 
-      by Yoshikazu Ohashi  20I1.3.  Direct Outcode Calculation for Faster Clip Testing by Walt Donovan and
+      II.4.  Computing the Area of a Spherical Polygon by Robert D Miller......................... 132
+      II.5  The Pleasures of "Perp Dot" Products byF. S. Hill, Jr, ..............138
+      II.6.  Geometry for N-Dimensional Graphics by Andrew J. Hanson .........149
 
-      Tim Van Hook.
+# III. Transformations......173
 
-      1l.4.  Computing the Area of a Spherical Polygon by Robert D Miller.  3211.5  The Pleasures of "Perp Dot" Products byF. S. Hill, Jr, ..............13II.6.  Geometry for N-Dimensional Graphics by Andrew J. Hanson .........149
+      III.1. Аrсbаll Rоtаtіоn Соntrоl bу Кѳn Shoemake........................175
+      III.2 Efficient Eigenvalues for Visualization by Robert L. Cromwel.........................193
+      III.3.Fast Inversion of Length- and Angle- Preserving Matrices by Kevin Wu...... 199
+      III.4.Polar Matrix Decomposition by Ken Shoemake.........................  207
+      III.5.Euler Angle Conversion by Ken Shoemake ..........................222
+      III.6.  Fiber Bundle Twist Reduction by Ken Shoemake.............................230
 
-# II. Transformations......
+# IV. Curves and Surfaces  ......................... 239
 
-      1l.1. Аrсbаll Rоtаtіоn Соntrоl bу Кѳn Ѕhоетк........................1751l.. Efficient Eigenvalues for Visualization by Robert L. Cromwel.193
-11.3.1l.4.1l.5.I.6.
+IV.1. Smoothing and Interpolation with Finite Differences by PauiH. C. Eilers... .241
+IV.2. Knot Insertion Using Forward Differences by Philtip Barry and Ron Goldman.........................251
 
-Fast Inversion of Length- and Angle- Preserving Matrices by Kevin Wu...... 199Polar Matrix Decomposition by Ken Shoemake  207Euler Angle Conversion by Ken Shoemake .  222Fiber Bundle Twist Reduction by Ken Shoemake....
+IV.3. Converting a Rational Curve to a Standard Rational Bernstein-BézierRepresentation by Chandrajit Bajaj and Guoliang Xu.... .256
 
-# V. Curves and Surtaces  , 239
+IV.4. intersecting Parametric Cubic Curves by Midpoint Subdivision by R. Victor Klassen.........................261
 
-IV.1. Smoothing and Interpolation with Finite Differences by PauiH. C. Eilers... .241IV.2. Knot Insertion Using Forward Differences by Philtip Barry and
+IV.5. Converting Rectangular Patches into Bézier Triangles by Dani Lischinski...278
+IV.6.  Tessellation of NURB Surfaces by John W. Peterson .  ...286
+IV.7. Equations of Cylinders and Cones by Ching-Kuang Shene.  ..321
+IV.8. An Implicit Surface Polygonizer by Jules Bloomenthal .  .324
 
-IV.3.
+# Ray Tracing.........................351
 
-IV.4.
+      V.1. Computing the Intersection of a Line and a Cylinder by Сhіng-Кuаng Ѕhепе...............................З5З
+      V.2. Intersecting a Ray with a Cylinder by Joseph M. Cychosz andWarren N. Waggenspack, Jr. ....356
 
-      Converting a Rational Curve to a Standard Rational Bernstein-BézierRepresentation by Chandrajit Bajaj and Guoliang Xu.
+      V.3. Voxel Traversal along a 3D Line by Daniel Cohen.........................366
 
-      intersecting Parametric Cubic Curves by Midpoint Subdivision by
+      V.4. Muli-tittered Sampling by Kenneth Chiu, Peter Shirley, and Changyaw Wang.......370
 
-... .256
+      V.5. A Minimal Ray Tracer by Paul S. Heckbert.....375
 
-IV.5. Converting Rectangular Patches into Bézier Triangles by Dani Lischinski...278V.6.  Tessellation of NURB Surfaces by John W. Peterson .  ...286IV.7. Equations of Cylinders and Cones by Ching-Kuang Shene.  ..321IV.8. An Implicit Surface Polygonizer by Jules Bloomenthal .  .324
+# VI. Shading.........................  383
 
-V.2.
+      VI.1. A Fast Alternative to Phong's Specular Model by Christophe Schlick... .385
+      VI.2. R.E versus N.H Specular Highlights by Frederick Fisher and Andrew Woo.. .388
+      VI.3. Fast Alternatives to Perlin's Bias and Gain Functions by Christophe Schtick. .401
+      VI.4. Fence Shading by Uwe Behrens.....  ..404
 
-V.3.V.4.
+# VII. Frame Buffer Techniques  .......................... 411
 
-351
+      VII.1. XOR-Drawing with Guaranteed Contrast by Manfred Kopp and Michael Gervautz  . 413
+      VII.2. A Contrast-Based Scalefactor for Luminance Display by Greg Ward ......415
+      VII.3. High Dynamic Range Pixels by Christophe Schlick. ......  . .422
 
-# Ray Tracing
+# VIII. Image Processing  ..........................431
 
-      V.1. Computing the Intersection of a Line and a Cylinder by
+      VIII.1. Fast Embossing Effects on Raster Image Dạta by John Schlag...  .... .433
+      VIII.2. Bilinear Coons Patch Image Warping by Paul S. Heckbert . ......................... .438
+      VIII.3. Fast Convolution with Packed Lookup Tables by George Wolberg and Henry Massalin ......................... 447
+      VIII.4. Efficient Binary Image Thinning Using Neighborhood Maps by Joseph M. Cychosz ........  465
+      VIII.5. Contrast Limited Adaptive Histogram Equalization by Karel Zuiderveld.....474
+      VIII.6. Ideal Tiles for Shading and Halftoning by Alan W. Peeth...............486
 
-      Сhіng-Кuаng Ѕhепе...............................З5ЗIntersecting a Ray with a Cylinder by Joseph M. Cychosz andWarren N. Waggenspack, Jr. ....
+# IX. Graphic Deslgn .......................... 495
 
-      Voxel Traversal along a 3D Line by Daniel Cohen
+      IX.1. Placing Text Labels on Maps and Diagrams by Jon Christensen, Joe Marks, and Stuart Shieber ..............  497
+      IX.2. Dynamic L ayout Algorithm to Display General Graphs by László Szirmay-Kalos...........................  505
 
-      Muli-tittered Sampling by Kenneth Chiu, Peter Shirley, andChangyaw Wang.......
+# X. Utilities  ...........................519
 
-      V.5. A Minimal Ray Tracer by Paul S. Heckbert.....
-
-.356.366
-
-      .370...375
-
-# VI. Shading  383
-
-      VI.1. A Fast Alternative to Phong's Specular Model by Christophe Schlick... .385VI.2. R.E versus N.H Specular Highlights by Frederick Fisher and Andrew Woo.. .388VI.3. Fast Alternatives to Perlin's Bias and Gain Functions by Christophe Schtick. .401VI.4. Fence Shading by Uwe Behrens.....  ..404
-
-# VII. Frame Buffer Techniques  . 411
-
-      VII.1. XOR-Drawing with Guaranteed Contrast by Manfred Kopp and
-
-      Michael Gervautz  . 413VII.2. A Contrast-Based Scalefactor for Luminance Display by Greg Ward ......415VII.3. High Dynamic Range Pixels by Christophe Schlick. ......  . .42
-
-# VIIB. Image Processing  .431
-
-      VII.1. Fast Embossing Effects on Raster Image Dạta by John Schlag...  .... .433VII.2. Bilinear Coons Patch Image Warping by Paul S. Heckbert .  .438VII.3. Fast Convolution with Packed Lookup Tables by George Wolberg
-
-      and Henry Massalin  447VII.4. Efficient Binary Image Thinning Using Neighborhood Maps by
-
-      Joseph M. Cychosz ........  465VII.S. Contrast Limited Adaptive Histogram Equalization by Karel Zuiderveld.....474VIIL.G. Ideal Tiles for Shading and Halftoning by Alan W, Pet...............486
-# IX. Graphic Deslgn  495
-
-      IX.1. Placing Text Labels on Maps and Diagrams by Jon Christensen, Joe Marks,
-
-      and Stuart Shieber ..............  97IX.2. Dynamic L ayout Algorithm to Display General Graphs by
-
-      László Szirmay-Kalos.  505
-
-# x. Utilities  .519
-
-      X.1. Tri-linear Interpolation by Steve Hill.  .521X.2.  Faster Linear Interpolation by Steven Eker  526X.3.  C++ Vector and Matrix Algebra Routines by Jean-François Doué.  . 534X.4. C Header File and Vector Library by Andrew Glassner and Eric Haines ....558Index  571
+      X.1. Tri-linear Interpolation by Steve Hill.  ...........................521
+      X.2.  Faster Linear Interpolation by Steven Eker .......................... 526
+      X.3.  C++ Vector and Matrix Algebra Routines by Jean-François Doué.  ........................... 534
+      X.4. C Header File and Vector Library by Andrew Glassner and Eric Haines ....558
