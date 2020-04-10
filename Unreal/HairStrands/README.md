@@ -21,8 +21,8 @@ Visibility Buffer和BSDF部分的实现在以下目录里：
 
 ## 基于Niagara实现的物理模拟
 UE4将发丝的物理模拟部分融合进了Niagara里，这一步操作有点让我不知道该怎么评价。   
-我们可以看到，默认的Groom Niagara System Asset是这样的结构。
-![Niagara](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/Niagara.png)
+我们可以看到，默认的Groom Niagara System Asset是这样的结构。   
+![Niagara](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/Niagara.png)   
 整体采用堆叠式的组件结构，内部采用类似于蓝图或者材质编辑器一样的节点结构，通过这些节点拼合成运行时使用的shader。  
 然而物理模拟各部分之间有比较强的依赖关系，很多步骤需要前置步骤的结果。例如Compute Grid Weights需要Transfer Groom Velocity的结果，并且它计算得到的结果要在下一帧里给Update Groom Velocity使用。这样的情况下，如果删除或者禁用某个组件，就无法得到正确的结果。并且，为了组件化、节点化，就难免会写一些冗余的代码。所以，在我看来，基于Niagara来实现发丝的物理模拟，着实有些多此一举了。   
 话虽如此，我们还是来看看物理模拟部分是怎样实现的，主要分为三个部分：   
@@ -39,8 +39,8 @@ UE4将发丝的物理模拟部分融合进了Niagara里，这一步操作有点�
 碰撞检测部分做得相对简单，将头发质点与球、立方体和胶囊体进行碰撞检测，然后修正质点的位置。没有做像TressFX那么SDF那种复杂的碰撞。
 
 ### 速度场约束
-前两个都是基本操作，PressureGrid是UE4新加的，似乎参考了寒霜PPT模拟部分的第三点。
-![FrostbiteSimulation](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/FrostbiteSimulation.png)
+前两个都是基本操作，PressureGrid是UE4新加的，似乎参考了寒霜PPT模拟部分的第三点。   
+![FrostbiteSimulation](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/FrostbiteSimulation.png)   
 然而又感觉有些出入。毕竟，寒霜PPT没有对这部分进行详细介绍，而向量场又是UE4的看家本领，拿来做替代品似乎也不错。   
 速度场类似于体素的原理，根据头发的包围盒，构建一个三维的立方体，三个轴向上分成若干个格子（Grid）。然后计算每个质点在哪个格子里，累加质量和动量到这个格子里。   
 然后接着会有一步转换操作，因为对浮点型进行原子操作（这里是InterlocekdAdd）比较麻烦，所以构建速度场的时候使用了一些trick。这里会将质量转换成正确的数值并将动量转换为速度。   
@@ -51,9 +51,9 @@ UE4将发丝的物理模拟部分融合进了Niagara里，这一步操作有点�
 
 关于为什么要用Visibility Buffer，可以看我之前的一个回答：
 [Visibility Buffer有什么缺点，有可能代替G-buffer吗？](https://www.zhihu.com/question/340549627/answer/996877805)
-UE4的Visibility Buffer基本上与寒霜的做法基本一致。
-![FrostbiteVisibility](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/FrostbiteVisibility.png)
-![FrostbiteDeduplication](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/FrostbiteDeduplication.png)
+UE4的Visibility Buffer基本上与寒霜的做法基本一致。   
+![FrostbiteVisibility](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/FrostbiteVisibility.png)   
+![FrostbiteDeduplication](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/FrostbiteDeduplication.png)   
 在原版（The Visibility Buffer: A Cache-Friendly Approach to Deferred Shading）的基础上进行了调整，加入了Deduplication。  
 可以分为以下几个步骤：
 1. 复制场景Opaque深度缓存到多采样的DepthTex
@@ -97,16 +97,16 @@ void MainPS(
 * 另外还有一些迷之转换，来回Encode和Decode，很多可以去掉。
 
 ## BSDF
-说到头发的BSDF，就不得不祭出这张图
-![Marschner](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/Marschner.png)
+说到头发的BSDF，就不得不祭出这张图   
+![Marschner](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/Marschner.png)   
 目前主流的pbr的头发光照模型都是基于Marschner模型上的改进（你说什么？KajiyaKay？对不起，它不是PBR）。
 Marschner创造性的将头发的光照分成了三个路径：
 1. R：反射
 2. TT：透射
 3. TRT：内反射（透射、内壁反射、透射）   
 
-然后将每个部分的散射函数有分为M和N。
-![MarschnerMN](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/MarschnerMN.png)
+然后将每个部分的散射函数有分为M和N。   
+![MarschnerMN](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/MarschnerMN.png)   
 M表示纵向上的散射函数，只考虑lobe的分布。
 N表示方位角（截面）上的散射函数，需要计算菲涅尔、吸收率和折射率。   
 虚幻曾在Siggraph 2016上做过演讲（Physically Based Hair Shading in Unreal），简化了TT和TRT的N函数，TT做了一些近似，而TRT基本上就是差不多就行。   
@@ -115,18 +115,18 @@ N表示方位角（截面）上的散射函数，需要计算菲涅尔、吸收�
 具体细节，各位同学可以看两篇PPT（或者等我哪天总结一下Marschner）。
 
 ## Deep Opacity Maps和Dual Scattering
-![DeepOpacity](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/DeepOpacity.png)
+![DeepOpacity](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/DeepOpacity.png)   
 Deep Opacity Maps的原理与Opacity Shadow Maps有些类似，不过它不是线性的分层，而是根据一张Front Depth Texture来分层，统计每层之间有多少头发。
 与Opacity Shadow Maps或Deep Shadow Maps不同的是，这里Deep Opacity Maps实际上是Dual Scattering的一部分Global Scattering。UE4并没有听取原文（（Dual Scattering Approximation for Fast Multiple Scattering in Hair））的建议，将T<sub>f</sub>（沿着光照方向上的透射值）和$\sigma$<sub>f</sub>（沿着光照方向上的发散系数）累积到texture里，只是保存了头发的数量。计算光照的时候，采样一张3D Lut，获得A<sub>f</sub>（透射值除以密度系数常量），pow(A<sub>f</sub>, HairCount - 1)来获得光照穿过数层头发后的衰减值。做了一个很粗糙的近似，不过看起来效果还可以。   
 而关于Local Scattering，也是在计算光照的时候采样3D Lut，获得A<sub>f</sub>、A<sub>b</sub>，然后带入到相关公式中计算。有兴趣的同学可以看原论文，这里不做赘述。而这张3D Lut是通过预积分头发的BSDF得到的。   
 
 ## 环境光和AO
-如果有同学导入Groom资源，发现怎么那么卡。其实，关闭HairStrands.SkyLighting和HairStrands.SkyAO（或者降低SkyLighting.SampleCount和SkyAO.SampleCount），我相信应该可以解决大部分问题。   
-因为里面用了Monte Carlo+Ray Marching！！！！
-![GoDie](pic/GoDie.png)
+如果有同学导入Groom资源，发现怎么那么卡。其实，关闭HairStrands.SkyLighting和HairStrands.SkyAO（或者降低SkyLighting.SampleCount和SkyAO.SampleCount），我相信应该可以解决大部分问题。    
+因为里面用了Monte Carlo+Ray Marching！！！！   
+![GoDie](pic/GoDie.png)   
 在此之前需要构建一个头发密度的体素，在计算环境光和AO的时候，随机数个（默认值16）光照方向在体素里进行ray marching计算头发数量，接着计算双重散射（环境光）或遮蔽（AO），最后做平均。此外，环境光还需要计算R（和TRT一起计算）和TT（采样一张预积分的3D Lut），这两部分也需要做一次Ray Marching（TT可以不做Ray Marching，但是需要构建一张ViewHairCountTexture）。   
 （PS：AO算了个BendNormal丢在那里也不用……）    
-前面说了Visibility Buffer的优化，其实也就是小打小闹，真的想在游戏里实装UE4的Groom，我觉得还是需要Trick一下环境光和AO。
+前面说了Visibility Buffer的优化，其实也就是小打小闹，真的想在游戏里实装UE4的Groom，我觉得还是需要Trick一下环境光和AO。   
 ![Trick](pic/Trick.jpg)
 
 ## 引用文献
