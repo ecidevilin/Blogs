@@ -116,7 +116,7 @@ N表示方位角（截面）上的散射函数，需要计算菲涅尔、吸收�
 
 ## Deep Opacity Maps和Dual Scattering
 ![DeepOpacity](https://raw.githubusercontent.com/ecidevilin/Blogs/master/Unreal/HairStrands/pic/DeepOpacity.png)   
-Deep Opacity Maps的原理与Opacity Shadow Maps有些类似，不过它不是线性的分层，而是根据一张Front Depth Texture来分层，统计每层之间有多少头发。
+Deep Opacity Maps的原理与Opacity Shadow Maps有些类似，不过它不是线性的分层，而是根据一张Front Depth Texture来分层，统计每层之间有多少头发。所以需要先对头发在灯光空间光栅化，将头发的深度保存到Front Depth Texture（这张图理论上可以直接合并到ShadowMap上）中，然后再对头发进行第二次光栅化，根据与Front Depth的距离，累加头发的数量到不同的层级（通道）。采样的时候，在相邻两层之间进行插值，获得头发的数量。   
 与Opacity Shadow Maps或Deep Shadow Maps不同的是，这里Deep Opacity Maps实际上是Dual Scattering的一部分Global Scattering。UE4并没有听取原文（（Dual Scattering Approximation for Fast Multiple Scattering in Hair））的建议，将T<sub>f</sub>（沿着光照方向上的透射值）和$\sigma$<sub>f</sub>（沿着光照方向上的发散系数）累积到texture里，只是保存了头发的数量。计算光照的时候，采样一张3D Lut，获得A<sub>f</sub>（透射值除以密度系数常量），pow(A<sub>f</sub>, HairCount - 1)来获得光照穿过数层头发后的衰减值。做了一个很粗糙的近似，不过看起来效果还可以。   
 而关于Local Scattering，也是在计算光照的时候采样3D Lut，获得A<sub>f</sub>、A<sub>b</sub>，然后带入到相关公式中计算。有兴趣的同学可以看原论文，这里不做赘述。而这张3D Lut是通过预积分头发的BSDF得到的。   
 
@@ -124,9 +124,9 @@ Deep Opacity Maps的原理与Opacity Shadow Maps有些类似，不过它不是�
 如果有同学导入Groom资源，发现怎么那么卡。其实，关闭HairStrands.SkyLighting和HairStrands.SkyAO（或者降低SkyLighting.SampleCount和SkyAO.SampleCount），我相信应该可以解决大部分问题。    
 因为里面用了Monte Carlo+Ray Marching！！！！   
 ![GoDie](pic/GoDie.png)   
-在此之前需要构建一个头发密度的体素，在计算环境光和AO的时候，随机数个（默认值16）光照方向在体素里进行ray marching计算头发数量，接着计算双重散射（环境光）或遮蔽（AO），最后做平均。此外，环境光还需要计算R（和TRT一起计算）和TT（采样一张预积分的3D Lut），这两部分也需要做一次Ray Marching（TT可以不做Ray Marching，但是需要构建一张ViewHairCountTexture）。   
+在此之前需要构建一个头发密度的体素，在计算环境光和AO的时候，随机数个（默认值16）光照方向在体素里进行ray marching计算头发数量，接着计算双重散射（环境光）或遮蔽（AO），最后做平均。此外，环境光还需要计算环境光的R（和TRT一起计算，直接带入BSDF公式）和TT（采样一张预积分的3D Lut），这两部分也需要做一次Ray Marching（TT可以不做Ray Marching，但是需要构建一张ViewHairCountTexture）。   
 （PS：AO算了个BendNormal丢在那里也不用……）    
-前面说了Visibility Buffer的优化，其实也就是小打小闹，真的想在游戏里实装UE4的Groom，我觉得还是需要Trick一下环境光和AO。   
+前面说了Visibility Buffer的优化，其实也就是小打小闹，如果真的想在游戏里实装UE4的Groom，我觉得还是需要Trick一下环境光和AO。   
 ![Trick](pic/Trick.jpg)
 
 ## 引用文献
